@@ -1,7 +1,15 @@
-import type { PropsWithChildren } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type {PropsWithChildren} from 'react';
+
+
+const queryClient = new QueryClient();
 
 export function AppProviders({ children }: PropsWithChildren) {
-    return <>{children}</>
+    return (
+        <QueryClientProvider client={queryClient}>
+            {children}
+        </QueryClientProvider>
+    )
 }
 
 {/*
@@ -17,4 +25,5 @@ Dette skal være våres faste sted for globale ting senere:
 - AuthProvider (innlogging/session)
 - tema/lokalisering
 */}
+
 

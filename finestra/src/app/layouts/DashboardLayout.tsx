@@ -1,9 +1,18 @@
-export function dashboardLayout() {
+import { Outlet } from "react-router-dom";
+
+export function DashboardLayout() {
     return (
-        <div>
-            <h1>Placeholder for DashboardLayout</h1>
-        </div>
+        <section>
+            <header>Placeholder for DashboardLayout</header>
+            <Outlet />
+        </section>
     );
 }
 
-{/* felles layout for innlogede sider (ikke skjema)*/}
+{/* felles layout for innlogede sider (ikke skjema),
+    outlet blir steder der ektra sidene i dashboardet blir vist (layout.wrapper
+    /dashboard
+    /dashboard/cases
+    /dashboard/cases/:caseId
+    /dashboard/stats
+*/}
