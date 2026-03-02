@@ -204,3 +204,6 @@ Den hjelper oss å:
 Frontend bruker public key.
 Sensitive ting skal ligge i Edge Functions.
 Service role key skal aldri inn i frontend.
+
+
+Separere dashboard side: lage en dashboard for butikk og en for leverandør 
