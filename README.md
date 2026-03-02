@@ -122,22 +122,30 @@ Dette er kundeskjemaet som åpnes via en unik lenke (`/s/:token`).
 Kunden bruker denne siden uten å logge inn.
 
 
-`src/features/`
-Her organiserer vi kode etter funksjon, ikke etter side.  
-Dette gjør prosjektet lettere å holde ryddig når det blir større.
+`src/components/`
+Her samler vi gjenbrukbare komponenter i stedet for å bruke en større `features/`-struktur.  
+Dette passer godt fordi prosjektet ikke er veldig stort, og gjør strukturen enklere å forstå.
 
-`src/features/cases/`
-Her skal alt som handler om servicesaker samles.
+`src/components/cases/`
+Her kan vi legge komponenter som hører til servicesaker, for eksempel:
+- listevisning
+- kort
+- statusvisning
+- detaljer som brukes flere steder
 
-`src/features/cases/index.ts`
-Foreløpig er dette bare en placeholder, men senere kan denne mappen inneholde logikk, typer, hooks og komponenter for saker.
+`src/components/customer-form/`
+Her kan vi legge komponenter og hjelpekode som hører til kundeskjemaet, for eksempel:
+- skjema-deler
+- input-seksjoner
+- validering
+- struktur på data
 
-`src/features/customer-form/`
-Her skal alt som handler om kundeskjema samles.
-
-`src/features/customer-form/schemas.ts`
-Her skal validering og struktur for kundeskjema ligge.  
-Foreløpig er dette bare en enkel placeholder.
+`src/components/shared/`
+Her kan vi legge små gjenbrukbare komponenter som brukes flere steder i appen, for eksempel:
+- knapper
+- badges
+- kort
+- enkle UI-elementer
 
 
 `src/lib/`
@@ -168,8 +176,6 @@ Her rendres `App` inn i nettleseren.
 Denne mappen er for backend-struktur knyttet til Supabase.  
 Vi bruker ikke lokal Supabase nå, men mappen gjør prosjektet klart for videre utvikling.
 
-`supabase/README.md`
-Denne filen forklarer hvordan Supabase-strukturen er tenkt brukt, og minner om at sensitive operasjoner skal ligge på serversiden.
 
 `supabase/functions/`
 Her skal Supabase Edge Functions ligge senere.  
