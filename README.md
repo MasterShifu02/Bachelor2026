@@ -2,7 +2,7 @@
 
 {/*  */}
 
-# PAKKER VI BRKER NÅ: 
+# PAKKER VI BRUKER NÅ: 
 
 `react`
 Brukes til å bygge brukergrensesnittet i appen med komponenter.
@@ -33,6 +33,27 @@ Den gjør det enklere å jobbe med lasting, caching og oppdatering av data.
 
 `vite-tsconfig-paths`
 Brukes for at Vite skal forstå alias fra TypeScript-konfigurasjonen vår, som `@/`.
+
+`shadcn`
+- Finestra bruker dette.
+- Gir ferdige, moderne komponenter som er enkle å tilpasse.
+- Passer godt sammen med React + Vite + Tailwind.
+- Komponentene ligger i vår egen kodebase (ikke “låst” i et eksternt UI-bibliotek).
+
+Viktige filer
+- `finestra/components.json`  
+  Konfig for shadcn (stil, aliases, css-fil osv.)
+- `finestra/src/index.css`  
+  Global styling og theme-variabler brukt av shadcn
+- `finestra/src/lib/utils.ts`  
+  Inneholder `cn()`-helperen som brukes av shadcn-komponenter
+- `finestra/src/components/ui/`  
+  Her legges shadcn-komponenter (f.eks. `button.tsx`)
+
+Hvordan bruke:
+Kjør fra `finestra`-mappen:
+Eks.:
+"npx shadcn@latest add button"
 
 
 # Pakker vi planlegger å bruke videre:
@@ -204,6 +225,3 @@ Den hjelper oss å:
 Frontend bruker public key.
 Sensitive ting skal ligge i Edge Functions.
 Service role key skal aldri inn i frontend.
-
-
-Separere dashboard side: lage en dashboard for butikk og en for leverandør 
