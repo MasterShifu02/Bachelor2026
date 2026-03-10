@@ -1,17 +1,13 @@
 import { Outlet } from 'react-router-dom'
+import { Header } from '@/components/header/header'
+import { Footer } from '@/components/footer/footer'
 
 export function PublicLayout() {
   return (
     <section>
-      <header>Placeholder for PublicLayout</header>
+      <Header />
       <Outlet />
+      <Footer />
     </section>
   )
 }
-
-{/* felles layout for offentlige sider = skjema (ikke dashbord),
-    rendres i Outlet
-    /login
-    /token
-*/}
-
