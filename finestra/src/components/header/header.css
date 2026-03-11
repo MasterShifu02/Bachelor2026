@@ -1,0 +1,51 @@
+header {
+  width: 100%;
+  background-color: #30275e;
+}
+
+.header-div {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 6rem;
+}
+
+.header-logo {
+  display: block;
+  width: 7rem;
+  max-width: 100%;
+  height: auto;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.crumb:hover {
+  border-color: #ffffff;
+}
+
+.crumb-active {
+  border-color: #ffffff;
+}
+
+
