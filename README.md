@@ -1,8 +1,8 @@
 # Bachelor2026
 
-{/*  */}
+{/\* \*/}
 
-# PAKKER VI BRKER NÅ: 
+# PAKKER VI BRUKER NÅ:
 
 `react`
 Brukes til å bygge brukergrensesnittet i appen med komponenter.
@@ -34,24 +34,50 @@ Den gjør det enklere å jobbe med lasting, caching og oppdatering av data.
 `vite-tsconfig-paths`
 Brukes for at Vite skal forstå alias fra TypeScript-konfigurasjonen vår, som `@/`.
 
+`shadcn`
+
+- Finestra bruker dette.
+- Gir ferdige, moderne komponenter som er enkle å tilpasse.
+- Passer godt sammen med React + Vite + Tailwind.
+- Komponentene ligger i vår egen kodebase (ikke “låst” i et eksternt UI-bibliotek).
+
+Viktige filer
+
+- `finestra/components.json`  
+  Konfig for shadcn (stil, aliases, css-fil osv.)
+- `finestra/src/index.css`  
+  Global styling og theme-variabler brukt av shadcn
+- `finestra/src/lib/utils.ts`  
+  Inneholder `cn()`-helperen som brukes av shadcn-komponenter
+- `finestra/src/components/ui/`  
+  Her legges shadcn-komponenter (f.eks. `button.tsx`)
+
+Hvordan bruke:
+Kjør fra `finestra`-mappen:
+Eks.:
+"npx shadcn@latest add button"
+
+`react-hook-form`
+Brukes for å håndtere skjemaer i React på en ryddig og effektiv måte.
+Den gjør det enklere å registrere felter, håndtere innsending, vise feil og holde skjema-logikk samlet.
+
+`zod`
+Brukes for validering av data og for å definere regler for hva som er gyldig input.
+Den gjør det enkelt å beskrive forventet struktur på data, for eksempel krav til tekstfelt, e-post, telefonnummer og obligatoriske felter.
+
+`@hookform/resolvers`
+Brukes for å koble react-hook-form sammen med valideringsbibliotek som zod.
+Denne pakken gjør at skjemaet kan bruke Zod-schema direkte for validering, slik at feil og regler blir håndtert på en samlet og ryddig måte.
+
+`@prettier`
+Brukes for å holde kodeformatet likt og ryddig i hele prosjektet.
+Den sørger for at alle i gruppen skriver kode med samme struktur, noe som gjør koden lettere å lese og vedlikeholde.
 
 # Pakker vi planlegger å bruke videre:
 
-`react-hook-form`
-Skal brukes for å håndtere skjemaer i React på en ryddig måte.
+...
 
-`zod`
-Skal brukes for validering av data og regler for hva som er gyldig input.
-
-`@hookform/resolvers`
-Skal brukes for å koble `react-hook-form` og `zod` sammen.
-
-`prettier`
-Skal brukes for å holde kodeformatet likt og ryddig for hele gruppen.
-
-
-
-# MAPPE STRUKTUR  :  (foreløpig plan)
+# MAPPE STRUKTUR : (foreløpig plan)
 
 `src/app/`
 Her ligger det som gjelder hele frontend-appen.  
@@ -62,9 +88,9 @@ Her samles alle rutene i appen på ett sted.
 Denne filen bestemmer hvilke sider som skal vises på hvilke URL-er.
 
 Vi bruker den til å skille mellom:
+
 - offentlige sider (for kunde og login)
 - dashboard-sider (for butikk og leverandør)
-
 
 `src/app/providers/`
 Her ligger globale providers som brukes i hele appen.  
@@ -85,7 +111,6 @@ Den brukes for sider som ikke krever vanlig innlogging, som login og kundeskjema
 `src/app/layouts/DashboardLayout.tsx`
 Dette er layouten for dashboardet.  
 Den brukes for interne brukere, altså butikk og leverandør.
-
 
 `src/routes/`
 Her ligger selve sidene i appen, delt opp etter område.
@@ -121,13 +146,13 @@ Her ligger offentlige skjema-sider.
 Dette er kundeskjemaet som åpnes via en unik lenke (`/s/:token`).  
 Kunden bruker denne siden uten å logge inn.
 
-
 `src/components/`
 Her samler vi gjenbrukbare komponenter i stedet for å bruke en større `features/`-struktur.  
 Dette passer godt fordi prosjektet ikke er veldig stort, og gjør strukturen enklere å forstå.
 
 `src/components/cases/`
 Her kan vi legge komponenter som hører til servicesaker, for eksempel:
+
 - listevisning
 - kort
 - statusvisning
@@ -135,6 +160,7 @@ Her kan vi legge komponenter som hører til servicesaker, for eksempel:
 
 `src/components/customer-form/`
 Her kan vi legge komponenter og hjelpekode som hører til kundeskjemaet, for eksempel:
+
 - skjema-deler
 - input-seksjoner
 - validering
@@ -142,11 +168,11 @@ Her kan vi legge komponenter og hjelpekode som hører til kundeskjemaet, for eks
 
 `src/components/shared/`
 Her kan vi legge små gjenbrukbare komponenter som brukes flere steder i appen, for eksempel:
+
 - knapper
 - badges
 - kort
 - enkle UI-elementer
-
 
 `src/lib/`
 Her ligger tekniske hjelpefiler og klienter som ikke hører til en bestemt feature.
@@ -162,7 +188,6 @@ Den bruker miljøvariabler for å koble appen til Supabase på en trygg måte.
 Denne filen videresender til den nye Supabase-klienten i `src/lib/supabase/client.ts`.  
 Den finnes for å gjøre overgangen ryddigere dersom noe fortsatt bruker gammel sti.
 
-
 `src/App.tsx`
 Dette er hovedinngangen til frontend-appen.  
 Her pakkes appen inn i globale providers, og routeren kobles til slik at riktige sider vises basert på URL.
@@ -171,15 +196,14 @@ Her pakkes appen inn i globale providers, og routeren kobles til slik at riktige
 Dette er startpunktet for React-appen.  
 Her rendres `App` inn i nettleseren.
 
-
 `supabase/` (i repo-root)
 Denne mappen er for backend-struktur knyttet til Supabase.  
 Vi bruker ikke lokal Supabase nå, men mappen gjør prosjektet klart for videre utvikling.
 
-
 `supabase/functions/`
 Her skal Supabase Edge Functions ligge senere.  
 Dette brukes til sensitive operasjoner som:
+
 - token-validering
 - e-postsending
 - annen server-side logikk
@@ -188,22 +212,18 @@ Dette brukes til sensitive operasjoner som:
 Her skal SQL-migrasjoner ligge senere.  
 Dette brukes for å holde styr på endringer i databasen, som tabeller, RLS-regler og indekser.
 
-
 JUSTIFICATION:
 Denne strukturen gjør prosjektet enklere å forstå og lettere å bygge videre på.
 
 Den hjelper oss å:
+
 - skille mellom offentlig og innlogget område
 - holde butikk og leverandør i samme dashboard-struktur, men med ulik tilgang
 - samle lik logikk på ett sted
 - gjøre koden lettere å vedlikeholde når systemet blir større.
 
-
-
 # SUPABASE:
+
 Frontend bruker public key.
 Sensitive ting skal ligge i Edge Functions.
 Service role key skal aldri inn i frontend.
-
-
-Separere dashboard side: lage en dashboard for butikk og en for leverandør 
