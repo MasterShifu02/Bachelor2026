@@ -7,7 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/Components/ui/table";
-function CaseTable() {
+import type { Case } from "../FilterBar/dummyCases";
+
+function CaseTable({ allCases }: { allCases: Case[] }) {
   return (
     <Table className="table-fixed w-full">
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -21,13 +23,15 @@ function CaseTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell>$250.00</TableCell>
-          <TableCell>vindusfeil</TableCell>
-        </TableRow>
+        {allCases.map((caseItem) => (
+          <TableRow key={caseItem.id}>
+            <TableCell>{caseItem.id}</TableCell>
+            <TableCell>{caseItem.title}</TableCell>
+            <TableCell>{caseItem.store}</TableCell>
+            <TableCell>{caseItem.status}</TableCell>
+            <TableCell>{caseItem.createdAt}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
