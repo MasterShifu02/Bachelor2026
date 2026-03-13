@@ -2,13 +2,22 @@ import NavigationButton from "../NavigationButton/NavigationButton";
 import CaseTable from "../CaseTable/CaseTable";
 import { FilterBar } from "../FilterBar/FilterBar";
 import React, { useState } from "react";
-import { dummyCases } from "../FilterBar/dummyCases";
+import { dummyCases, statuses } from "../FilterBar/dummyCases";
 
 function StoreDashboard() {
   const [selectedStore, setSelectedStore] = useState("");
+
+  //Kodesnutter for filtering av status på saker
+  const [selectedStatus, setSelectedStatus] = useState("");
+
+  //Filteringslogikk
   const filteredCases = dummyCases.filter((caseItem) => {
-    if (selectedStore === "") return true;
-    return caseItem.store === selectedStore;
+    const matchesStore =
+      selectedStore === "" || caseItem.store === selectedStore;
+
+    const matchesStatus =
+      selectedStatus === "" || caseItem.status === selectedStatus;
+    return matchesStore && matchesStatus;
   });
   const stores = [...new Set(dummyCases.map((c) => c.store))];
 
@@ -23,6 +32,9 @@ function StoreDashboard() {
           setSelectedStore={setSelectedStore}
           selectedStore={selectedStore}
           allStores={stores}
+          setSelectedStatus={setSelectedStatus}
+          selectedStatus={selectedStatus}
+          statuses={statuses}
         />
       </div>
 

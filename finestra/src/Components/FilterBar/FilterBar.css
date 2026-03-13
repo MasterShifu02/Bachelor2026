@@ -1,0 +1,8 @@
+select{
+    color: #5F6368;
+    background-color: #EAE9EF;
+    margin-right: 1rem; /*Midlertidig space mellom knappene */
+    border-radius: 10px;
+    border: 1px solid;
+    padding: 1rem;
+}
