@@ -40,18 +40,15 @@ serve(async (req: Request) => {
   // GET → hent saken
   // -------------------
   if (req.method === "GET") {
-
     return new Response(JSON.stringify(caseData), {
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     })
-
   }
 
   // -------------------
-  // POST → oppdater saken
+  // POST → oppdater skjema
   // -------------------
-  if (req.method === "POST") {
-
+  if (req.method === "POST" && url.pathname === "/submit") {
     const body = await req.json()
 
     const { data, error } = await supabase
@@ -60,26 +57,63 @@ serve(async (req: Request) => {
         ...body,
         status: "submitted_by_customer",
         token_used: true,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("id", caseData.id)
       .select()
       .single()
 
-    await supabase
-      .from("case_events")
-      .insert({
-        case_id: caseData.id,
-        actor_name: "Customer",
-        actor_role: "customer",
-        event_type: "submitted_form",
-        description: "Customer submitted case form"
-      })
+    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
 
-    return new Response(JSON.stringify(data), {
-      headers: { "Content-Type": "application/json" }
+    await supabase.from("case_events").insert({
+      case_id: caseData.id,
+      actor_name: "Customer",
+      actor_role: "customer",
+      event_type: "submitted_form",
+      description: "Customer submitted case form",
     })
 
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" },
+    })
+  }
+
+  // -------------------
+  // POST /upload → last opp vedlegg
+  // -------------------
+  if (req.method === "POST" && url.pathname === "/upload") {
+    const formData = await req.formData()
+    const file = formData.get("file") as File
+
+    if (!file) return new Response(JSON.stringify({ error: "No file provided" }), { status: 400 })
+
+    const filePath = `${caseData.id}/${file.name}`
+
+    const { error: uploadError } = await supabase.storage
+      .from("attachments")
+      .upload(filePath, file.stream(), {
+        cacheControl: "3600",
+        upsert: false,
+      })
+
+    if (uploadError) {
+      return new Response(JSON.stringify({ error: uploadError.message }), { status: 500 })
+    }
+
+    // Lag attachment record i DB
+    const { error: dbError } = await supabase
+      .from("attachments")
+      .insert({
+        case_id: caseData.id,
+        file_url: filePath,
+        uploaded_by: null, // anonym kunde
+      })
+
+    if (dbError) {
+      return new Response(JSON.stringify({ error: dbError.message }), { status: 500 })
+    }
+
+    return new Response(JSON.stringify({ message: "File uploaded successfully" }))
   }
 
   return new Response("Method not allowed", { status: 405 })
