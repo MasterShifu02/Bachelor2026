@@ -10,6 +10,19 @@ function SupplierDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const stores = [...new Set(dummyCases.map((c) => c.store))];
 
+  //Filteringslogikk:
+  const filteredCases = dummyCases.filter((caseItem) => {
+    const matchesStore =
+      selectedStore === "" || caseItem.store === selectedStore;
+    const matchesStatus =
+      selectedStatus === "" || caseItem.status === selectedStatus;
+    const matchesSearchTerm =
+      searchTerm === "" ||
+      caseItem.id === searchTerm ||
+      caseItem.id.includes(searchTerm);
+    return matchesStore && matchesStatus && matchesSearchTerm;
+  });
+
   return (
     <div>
       <NavigationButton placeholder="Statistikk" linken="./stats" />
@@ -25,7 +38,7 @@ function SupplierDashboard() {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />
-      <CaseTable allCases={dummyCases} />
+      <CaseTable allCases={filteredCases} />
     </div>
   );
 }
