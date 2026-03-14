@@ -5,4 +5,9 @@ select{
     border-radius: 10px;
     border: 1px solid;
     padding: 1rem;
+    width: 150px;
+}
+.searchField{
+    height: 100%;
+    width: 300px;
 }

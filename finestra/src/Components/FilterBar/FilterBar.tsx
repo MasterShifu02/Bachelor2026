@@ -7,6 +7,8 @@ type FilterBarProps = {
   selectedStatus: string;
   setSelectedStatus: (status: string) => void;
   statuses: readonly string[];
+  searchTerm: string;
+  setSearchTerm: (seardchTerm: string) => void;
 };
 
 export function FilterBar({
@@ -15,6 +17,8 @@ export function FilterBar({
   allStores,
   selectedStatus,
   setSelectedStatus,
+  searchTerm,
+  setSearchTerm,
 }: FilterBarProps) {
   return (
     <>
@@ -40,6 +44,13 @@ export function FilterBar({
           </option>
         ))}
       </select>
+      <input
+        className="searchField"
+        type="search"
+        value={searchTerm}
+        placeholder="Søk etter ordernummer..."
+        onChange={(e) => setSearchTerm(e.target.value)}
+      ></input>
     </>
   );
 }

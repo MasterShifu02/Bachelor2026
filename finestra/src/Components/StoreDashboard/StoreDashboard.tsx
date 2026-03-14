@@ -10,6 +10,9 @@ function StoreDashboard() {
   //Kodesnutter for filtering av status på saker
   const [selectedStatus, setSelectedStatus] = useState("");
 
+  //Kodesnutter for å søke etter saker
+  const [searchTerm, setSearchTerm] = useState("");
+
   //Filteringslogikk
   const filteredCases = dummyCases.filter((caseItem) => {
     const matchesStore =
@@ -17,7 +20,12 @@ function StoreDashboard() {
 
     const matchesStatus =
       selectedStatus === "" || caseItem.status === selectedStatus;
-    return matchesStore && matchesStatus;
+
+    const matchedSearchTerm =
+      searchTerm === "" ||
+      caseItem.id === searchTerm ||
+      caseItem.id.includes(searchTerm);
+    return matchesStore && matchesStatus && matchedSearchTerm;
   });
   const stores = [...new Set(dummyCases.map((c) => c.store))];
 
@@ -34,7 +42,9 @@ function StoreDashboard() {
           allStores={stores}
           setSelectedStatus={setSelectedStatus}
           selectedStatus={selectedStatus}
-          statuses={statuses}
+          statuses={statuses} //statiske statusverdier
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       </div>
 
