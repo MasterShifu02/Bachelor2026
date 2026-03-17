@@ -4,7 +4,7 @@ export function DashboardPage() {
   const userRole = "store"; // Dette er hardkodet for nå
   return (
     <main>
-      {userRole === "store" ? <StoreDashboard /> : <SupplierDashboard />}
+      {userRole === "store" ? <SupplierDashboard /> : <StoreDashboard />}
     </main>
   );
 }

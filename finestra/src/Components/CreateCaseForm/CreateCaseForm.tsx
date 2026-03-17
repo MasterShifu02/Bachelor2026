@@ -8,8 +8,7 @@ function handlePrefillForm() {
 function CreateCaseForm() {
   return (
     <>
-      <h1>Opprett Sak</h1>
-      <p></p>
+      <h1 className="create-case-header">Opprett Sak</h1>
       <form className="form-container">
         <div className="inputfield">
           <label>Fornavn...</label>
