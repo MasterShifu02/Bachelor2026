@@ -48,7 +48,7 @@ function StoreDashboard() {
         />
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-16">
         <CaseTable allCases={filteredCases} />
       </div>
     </div>
