@@ -3,14 +3,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
-.inputfield{
+.inputSection{
     display: flex;
     flex-direction: column;
     grid-column: 1;
     text-align: left;
      justify-self: center;
 }
-input {
+.inputfield {
     border-width: 1px;
     border-style: solid;
     border-color: black;
@@ -19,7 +19,7 @@ input {
     width: 400px;
 
 }
-label{
+.inputLabel{
     grid-column: 1;
     margin-bottom: 10px;
     color: #5F6368;
@@ -34,7 +34,7 @@ label{
 
 }
 
-textarea{
+#messagefield{
     border-color: black;
     border-width: 1px;
     border-style: solid;
@@ -44,20 +44,20 @@ textarea{
     box-sizing: border-box;
      justify-self: center;
 }
-create-case-header{
+.create-case-header{
     font-size: 40px;
     color: #5F6368;
 }
 .buttonSection {
  grid-column: 2;
- margin-top: 5px;
+ margin: 15px;
 }
 
 @media screen and (max-width: 800px) {
     .form-container{
         grid-template-columns: 1fr;
     }
-    .inputfield{
+    .inputSection{
         grid-column: 1;
         justify-self: stretch;
     }

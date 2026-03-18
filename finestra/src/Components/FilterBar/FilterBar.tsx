@@ -23,6 +23,7 @@ export function FilterBar({
   return (
     <>
       <select
+        className="options-button"
         value={selectedStore}
         onChange={(e) => setSelectedStore(e.target.value)}
       >
@@ -34,6 +35,7 @@ export function FilterBar({
         ))}
       </select>
       <select
+        className="options-button"
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value)}
       >

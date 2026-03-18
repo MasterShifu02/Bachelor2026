@@ -9,7 +9,8 @@ function SupplierDashboard() {
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const stores = [...new Set(dummyCases.map((c) => c.store))];
+  const stores = [...new Set(dummyCases.map((c) => c.store))]; //hardkodet definerte butikker
+
   //inkommende saker
   const incomingCases = dummyCases.filter(
     (caseItem) => caseItem.status === "Ny",
@@ -18,7 +19,7 @@ function SupplierDashboard() {
   //Filteringslogikk av 'Alle eksisterende saker (nederste tabell)':
   const filteredCases = dummyCases.filter((caseItem) => {
     const matchesStore =
-      selectedStore === "" || caseItem.store === selectedStore;
+      selectedStore === "" || caseItem.store === selectedStore; //returnerer true hvis en av de er sanne, enten ingen butikker valgt eller matcher
     const matchesStatus =
       selectedStatus === "" || caseItem.status === selectedStatus;
     const matchesSearchTerm =
@@ -30,7 +31,7 @@ function SupplierDashboard() {
 
   return (
     <div className="content-layout">
-      <div className="buttonSection">
+      <div className="navigationButtonSection">
         <NavigationButton placeholder="Statistikk" linken="./stats" />
         <NavigationButton placeholder="Se alle saker" linken="./cases" />
       </div>

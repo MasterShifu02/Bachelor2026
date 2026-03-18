@@ -1,19 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom';
+import './login.css'
 
+import { LoginCard } from './LoginCard'
 
 export function LoginPage() {
-    return (
-        <main>
-            <h1>placeholder for LoginPage </h1>
-            
-            <Button asChild>
-                <Link to="/dashboard">Knappen til Trym</Link>
-             </Button>
-
-        </main>
-    );
+  return (
+    <main className="login-page">
+      <LoginCard />
+    </main>
+  )
 }
-
-
-{/* dette er auth-route */}
