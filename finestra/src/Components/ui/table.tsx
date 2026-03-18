@@ -1,6 +1,8 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import { Key } from "lucide-react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -21,7 +23,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn("[&_tr]:border-b bg-[#EAE9EF]", className)}
       {...props}
     />
   );
@@ -81,7 +83,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+        "p-2 align-middle text-center whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         className,
       )}
       {...props}

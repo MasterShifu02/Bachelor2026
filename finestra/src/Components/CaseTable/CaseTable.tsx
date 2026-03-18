@@ -8,11 +8,12 @@ import {
   TableRow,
 } from "@/Components/ui/table";
 import type { Case } from "../FilterBar/dummyCases";
+import { useNavigate } from "react-router-dom";
 
 function CaseTable({ allCases }: { allCases: Case[] }) {
+  const navigate = useNavigate();
   return (
     <Table className="table-fixed w-full">
-      <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Ordrenummer</TableHead>
@@ -24,7 +25,10 @@ function CaseTable({ allCases }: { allCases: Case[] }) {
       </TableHeader>
       <TableBody>
         {allCases.map((caseItem) => (
-          <TableRow key={caseItem.id}>
+          <TableRow
+            key={caseItem.id}
+            onClick={() => navigate(`./cases/${caseItem.id}`)}
+          >
             <TableCell>{caseItem.id}</TableCell>
             <TableCell>{caseItem.title}</TableCell>
             <TableCell>{caseItem.store}</TableCell>

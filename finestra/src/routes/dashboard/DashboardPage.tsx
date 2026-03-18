@@ -1,9 +1,10 @@
 import { StoreDashboard } from "../../Components/StoreDashboard/StoreDashboard";
+import { SupplierDashboard } from "../../Components/SupplierDashboard/SupplierDashboard";
 export function DashboardPage() {
+  const userRole = "store"; // Dette er hardkodet for nå
   return (
     <main>
-      <h1>Placeholder for DashboardPage</h1>
-      <StoreDashboard />
+      {userRole === "store" ? <SupplierDashboard /> : <StoreDashboard />}
     </main>
   );
 }

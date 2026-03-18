@@ -1,41 +1,47 @@
-import NavigationButton from "../NavigationButton/NavigationButton";
 import CaseTable from "../CaseTable/CaseTable";
 import { FilterBar } from "../FilterBar/FilterBar";
-import React, { useState } from "react";
 import { dummyCases, statuses } from "../FilterBar/dummyCases";
+import React, { useState } from "react";
+import NavigationButton from "../NavigationButton/NavigationButton";
+import "./SupplierDashboard.css";
 
-function StoreDashboard() {
+function SupplierDashboard() {
   const [selectedStore, setSelectedStore] = useState("");
-
-  //Kodesnutter for filtering av status på saker
   const [selectedStatus, setSelectedStatus] = useState("");
-
-  //Kodesnutter for å søke etter saker
   const [searchTerm, setSearchTerm] = useState("");
+  const stores = [...new Set(dummyCases.map((c) => c.store))];
+  //inkommende saker
+  const incomingCases = dummyCases.filter(
+    (caseItem) => caseItem.status === "Ny",
+  );
 
-  //Filteringslogikk
+  //Filteringslogikk av 'Alle eksisterende saker (nederste tabell)':
   const filteredCases = dummyCases.filter((caseItem) => {
     const matchesStore =
       selectedStore === "" || caseItem.store === selectedStore;
-
     const matchesStatus =
       selectedStatus === "" || caseItem.status === selectedStatus;
-
-    const matchedSearchTerm =
+    const matchesSearchTerm =
       searchTerm === "" ||
       caseItem.id === searchTerm ||
       caseItem.id.includes(searchTerm);
-    return matchesStore && matchesStatus && matchedSearchTerm;
+    return matchesStore && matchesStatus && matchesSearchTerm;
   });
-  const stores = [...new Set(dummyCases.map((c) => c.store))];
 
   return (
-    <div className="flex flex-col mt-40 gap-10">
-      <div className="flex justify-center gap-6">
-        <NavigationButton placeholder="Opprett ny sak" linken="./create-case" />
+    <div className="content-layout">
+      <div className="buttonSection">
+        <NavigationButton placeholder="Statistikk" linken="./stats" />
         <NavigationButton placeholder="Se alle saker" linken="./cases" />
       </div>
       <div>
+        <h1 className="dashboardHeader">Inkommende saker:</h1>
+      </div>
+      <div className="incomingCasesTable">
+        <CaseTable allCases={incomingCases} />
+      </div>
+      <h1 className="dashboardHeader">Alle eksisterende saker:</h1>
+      <div className="filterBar">
         <FilterBar
           setSelectedStore={setSelectedStore}
           selectedStore={selectedStore}
@@ -47,11 +53,10 @@ function StoreDashboard() {
           setSearchTerm={setSearchTerm}
         />
       </div>
-
-      <div className="flex justify-center mb-16">
+      <div>
         <CaseTable allCases={filteredCases} />
       </div>
     </div>
   );
 }
-export { StoreDashboard };
+export { SupplierDashboard };

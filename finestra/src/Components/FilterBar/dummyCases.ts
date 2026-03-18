@@ -3,7 +3,8 @@ export type Store = "Hamar" | "Oslo" | "Zwolle";
 export const statuses = [
   "Behandlet",
   "Ubehandlet",
-  "Under behandling" 
+  "Under behandling",
+  "Ny" 
 ] as const;
 export type Status = typeof statuses[number];
 
@@ -48,14 +49,14 @@ export const dummyCases: Case[] = [
     id: "56",
     title: "Login issues",
     store: "Oslo",
-    status: "Under behandling",
+    status: "Ny",
     createdAt: "2024-03-05",
   },
   {
     id: "6",
     title: "Receipt printer jam",
     store: "Zwolle",
-    status: "Behandlet",
+    status: "Ny",
     createdAt: "2024-03-06",
   },
   {
@@ -76,7 +77,7 @@ export const dummyCases: Case[] = [
     id: "9",
     title: "WiFi unstable",
     store: "Zwolle",
-    status: "Ubehandlet",
+    status: "Ny",
     createdAt: "2024-03-09",
   },
 ];
