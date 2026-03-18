@@ -14,7 +14,6 @@ function CaseTable({ allCases }: { allCases: Case[] }) {
   const navigate = useNavigate();
   return (
     <Table className="table-fixed w-full">
-      <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Ordrenummer</TableHead>

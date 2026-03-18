@@ -37,7 +37,7 @@ function SupplierDashboard() {
       <div>
         <h1 className="dashboardHeader">Inkommende saker:</h1>
       </div>
-      <div>
+      <div className="incomingCasesTable">
         <CaseTable allCases={incomingCases} />
       </div>
       <h1 className="dashboardHeader">Alle eksisterende saker:</h1>
