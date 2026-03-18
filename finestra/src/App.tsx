@@ -16,7 +16,7 @@ function App() {
 
 export default App
 
-{/*
+{/*  
 App.tsx er hovedinngangen til frontend-appen
 Her pakkes hele appen inn i globale providers,
 og RouterProvider sørger for at rutene i appRouter rendres riktig.
