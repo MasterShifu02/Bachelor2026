@@ -1,16 +1,48 @@
-import { RouterProvider } from 'react-router-dom'
-import { AppProviders } from './app/providers/AppProviders'
-import { appRouter } from './app/router'
-import './App.css'
 
+import './App.css'
+import { useEffect, useState } from "react"
+import { getSession } from "./services/authService"
+import { LoginPage } from "./routes/auth/LoginPage"
+import { DashboardPage } from "./routes/dashboard/DashboardPage"
+import LogoutButton from "./Components/Header/LogoutButton"
 function App() {
+
+  const [session, setSession] = useState<unknown>(null)
+  const [loading, setLoading] = useState(true)
+
+  async function checkSession() {
+
+    const session = await getSession()
+
+    setSession(session)
+
+    setLoading(false)
+
+  }
+
+    useEffect(() => { 
+    (async () => {
+      await checkSession()
+    })()
+    }, [])
+
+  if (loading) return <div>Loading...</div>
+
+  if (!session)
+    return <LoginPage onLogin={checkSession} />
+
   return (
-    <>
-      <AppProviders>
-        <RouterProvider router={appRouter} />
-      </AppProviders>
-    </>
+
+    <div>
+
+      <LogoutButton onLogout={() => setSession(null)} />
+
+      <DashboardPage />
+
+    </div>
+
   )
+
 }
 
 
