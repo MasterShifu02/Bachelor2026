@@ -1,4 +1,4 @@
-select{
+.options-button{
     color: #5F6368;
     background-color: #EAE9EF;
     margin-right: 1rem; /*Midlertidig space mellom knappene */
@@ -8,6 +8,7 @@ select{
     width: 150px;
 }
 .searchField{
-    height: 100%;
+    height: 55px;
     width: 300px;
+    border: 1px solid;
 }

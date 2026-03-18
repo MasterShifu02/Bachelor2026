@@ -11,7 +11,7 @@ export default function ActionButton({
 }: ActionButtonProps) {
   return (
     <>
-      <button className={variant} onClick={onClick}>
+      <button className={`actionButtonStyle ${variant}`} onClick={onClick}>
         {name}
       </button>
     </>

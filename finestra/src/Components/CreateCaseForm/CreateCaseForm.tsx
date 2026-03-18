@@ -10,8 +10,8 @@ function CreateCaseForm() {
     <>
       <h1 className="create-case-header">Opprett Sak</h1>
       <form className="form-container">
-        <div className="inputfield">
-          <label>Fornavn...</label>
+        <div className="inputSection">
+          <label className="inputLabel">Fornavn...</label>
           <input
             type="text"
             id="fname"
@@ -19,17 +19,31 @@ function CreateCaseForm() {
             className="inputfield"
           ></input>
         </div>
-        <div className="inputfield">
-          <label>Etternavn...</label>
-          <input type="text" id="lname" name="lname"></input>
+        <div className="inputSection">
+          <label className="inputLabel">Etternavn...</label>
+          <input
+            type="text"
+            id="lname"
+            name="lname"
+            className="inputfield"
+          ></input>
         </div>
-        <div className="inputfield">
-          <label htmlFor="email">E-post...</label>
-          <input type="text" id="email" name="epost"></input>
+        <div className="inputSection">
+          <label htmlFor="email" className="inputLabel">
+            E-post...
+          </label>
+          <input
+            type="text"
+            id="email"
+            name="epost"
+            className="inputfield"
+          ></input>
         </div>
 
         <div className="message">
-          <label htmlFor="messagefield">Melding (valgfritt)</label>
+          <label htmlFor="messagefield" className="inputLabel">
+            Melding (valgfritt)
+          </label>
           <textarea id="messagefield" name="messagefield"></textarea>
           <div className="buttonSection">
             <ActionButton
