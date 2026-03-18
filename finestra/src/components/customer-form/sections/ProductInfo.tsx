@@ -20,14 +20,14 @@ export function ProductInfo(props: ProductInfoProps) {
             <h2 className="text-lg font-semibold">Produkt informasjon</h2>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
+                <article className="space-y-2">
 
                     <Label htmlFor="productNameModel">Produktnavn / Modell *</Label>
 
                     <input
                         id="productNameModel"
                         type="text"
-                        placeholder="Produkt-Navn"
+                        placeholder="Skriv produkt navn her"
                         {...register("productNameModel")}
                         className="w-full border p-2"
                     />
@@ -36,11 +36,24 @@ export function ProductInfo(props: ProductInfoProps) {
                             {errors.productNameModel.message}
                         </p>
                     )}
-                </div>
+                </article>
+                <article className="space-y-2">
 
-                <div className="space-y-2">
+                    <Label htmlFor="productNameModel">Serienummer *</Label>
 
-                </div>
+                    <input
+                        id="productSerialNumber"
+                        type="text"
+                        placeholder="Skriv produkt serienummer her"
+                        {...register("productSerialNumber")}
+                        className="w-full border p-2"
+                    />
+                    {errors.productSerialNumber && (
+                        <p className="text-sm text-red-600">
+                            {errors.productSerialNumber.message}
+                        </p>
+                    )}
+                </article>
 
 
 
