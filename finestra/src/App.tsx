@@ -23,7 +23,7 @@ og RouterProvider sørger for at rutene i appRouter rendres riktig.
 
 AppProviders legger globale wrappers rundt hele appen
 RouterProvider leser rutene fra appRouter
-Basert på URL-en rendrer React Router riktig layout og side
+Basert på URL-en rendrer React Router riktig layout og sideieieie oeoe
 
 */
 }
