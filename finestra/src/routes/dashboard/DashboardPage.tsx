@@ -1,9 +1,14 @@
+import { StoreDashboard } from "../../Components/StoreDashboard/StoreDashboard";
+import { SupplierDashboard } from "../../Components/SupplierDashboard/SupplierDashboard";
 export function DashboardPage() {
-    return (
-        <main>
-            <h1>Placeholder for DashboardPage</h1>
-        </main>
-    );
+  const userRole = "store"; // Dette er hardkodet for nå
+  return (
+    <main>
+      {userRole === "store" ? <SupplierDashboard /> : <StoreDashboard />}
+    </main>
+  );
 }
 
-{/* dette er dashboard-route */}
+{
+  /* dette er dashboard-route */
+}

@@ -1,0 +1,48 @@
+.footer {
+  width: 100%;
+  background-color: #30275e;
+}
+
+.footer-div {
+  min-height: 120px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem;
+  color: #ffffff;
+}
+
+.footer-settings-btn,
+.footer-up-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0.45rem;
+  background-color: #15103b;
+  color: #ffffff;
+}
+
+.footer-settings-btn {
+  width: 64px;
+  height: 64px;
+}
+
+.footer-up-btn {
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.footer-copy,
+.footer-delivered {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.footer-delivered {
+  white-space: nowrap;
+}
