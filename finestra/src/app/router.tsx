@@ -24,9 +24,7 @@ export const appRouter = createBrowserRouter([
     children: [
       {
         path: '/login',
-        element: <LoginPage onLogin={function (): void {
-          throw new Error('Function not implemented.')
-        } } />,
+        element: <LoginPage />,
         handle: {
           description: 'Login page',
         },
