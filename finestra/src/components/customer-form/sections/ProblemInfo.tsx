@@ -75,7 +75,7 @@ export function ProblemInfo(props: ProblemInfoProps) {
           id="problemDescription"
           {...register("problemDescription")}
           placeholder="Beskriv problemet her:"
-          className="min-h-20"
+          className="min-h-20 w-full"
         />
 
         {errors.problemDescription && (

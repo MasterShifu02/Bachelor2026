@@ -59,7 +59,7 @@ export function ProductInfo(props: ProductInfoProps) {
                 
                 <article className="space-y-2">
 
-                    <Label htmlFor="productNameModel">Serienummer *</Label>
+                    <Label htmlFor="productSerialNumber">Serienummer *</Label>
 
                     <input
                         id="productSerialNumber"
