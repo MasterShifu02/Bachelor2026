@@ -3,7 +3,7 @@ import './header.css'
 
 export function Header() {
   return (
-    <header>
+    <header className="header-total">
       <div className="header-div">
         <a href="https://chatgpt.com/" target="_blank" rel="noreferrer">
           <img
