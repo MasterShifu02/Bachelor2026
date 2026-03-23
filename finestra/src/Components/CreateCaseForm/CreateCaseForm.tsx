@@ -1,5 +1,5 @@
 import "./CreateCaseForm.css";
-import { ActionButton } from "../ActionButton/ActionButton";
+import { ActionButton } from "../../components/ActionButton/ActionButton";
 
 function handlePrefillForm() {
   console.log("funksjon for å åpne forhåndsutfyllingsskjema");
