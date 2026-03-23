@@ -39,25 +39,28 @@ export function CustomerForm({ token }: CustomerFormProps) {
 
 
   return (
-    <main className="mx-auto max-w-a3xl border bg-background px-4 py-6">
+    <main className="mx-auto max-w-4xl border bg-background px-4 py-6">
+
 
       <header className="space-y-2">
         <h1 className="text-2xl font-bold">Skjema for saksopprettelse</h1>
         <h2 className="mb-4">Vennligst fyll ut skjemaet nedenfor og send inn din sak.</h2>
       </header>
       
+
       <Separator className="p-1 mb-4" />
 
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+
 
         <ProductInfo
           register={register}
           errors={errors}
         />
 
+
       <Separator className="p-1 mb-4" />
-
-
 
 
         <ProblemInfo
@@ -69,14 +72,17 @@ export function CustomerForm({ token }: CustomerFormProps) {
         />
 
 
-
       <Separator className="p-1 mb-4" />
+
 
         <ContactInfo
-
+          register={register}
+          errors={errors}
         />
 
+
       <Separator className="p-1 mb-4" />
+
 
         <section className="space-y-3">
           <div className="flex items-start gap-3">
