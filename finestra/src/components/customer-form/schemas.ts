@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const customerFormSchema = z.object({
 
+// Produkt info schema
   productNameModel: z
     .string()
     .min(5, {
@@ -15,7 +16,6 @@ export const customerFormSchema = z.object({
     .min(5)
     .max(100)
     .optional(),
-
 
   productSpacerNumber: z
     .string()
@@ -34,7 +34,7 @@ export const customerFormSchema = z.object({
 
 
 
-
+//Problem info schema
   problemType: z
     .string()
     .min(1, {
@@ -55,11 +55,34 @@ export const customerFormSchema = z.object({
 
 
 
+//kunde info schema
+  contactName: z
+  .string()
+  .min(2, {
+    message: "Skriv inn navn.",
+  })
+  .max(100, {
+    message: "Navn er for langt.",
+  }),
 
+  telefonNumber: z
+  .string()
+  .min(8, {
+    message: "Skriv inn telefonnummer.",
+  })
+  .max(8, {
+    message: "Telefonnummer er for langt.",
+  }),
+
+  email: z.email({
+    message: "Skriv inn en gyldig e-postadresse.",
+  }),
+
+//Sluttlig bekreftelse
   confirmCorrectInfo: z
   .boolean()
   .refine((value) => value, {
-    message: "Bekrefte at informasjonen er korrekt.", }),
+    message: "Bekreft at informasjonen er korrekt.", }),
 
 
 
@@ -78,6 +101,11 @@ export const customerFormDefaultValues: CustomerFormValues = {
   problemType: "",
   problemDescription: "",
   problemDate: "",
+
+
+  contactName: "",
+  telefonNumber: "",
+  email: "",
 
 
   confirmCorrectInfo: false,

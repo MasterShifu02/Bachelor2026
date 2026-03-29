@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@types/deno": "^2.5.0"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.4"
   }
 }
