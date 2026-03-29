@@ -1,4 +1,4 @@
-header {
+.header-total {
   width: 100%;
   background-color: #30275e;
 }
@@ -32,7 +32,6 @@ header {
   gap: 0.55rem;
   padding: 0.55rem 0.95rem;
   border: 1px solid transparent;
-  border-radius: 9999px;
   color: #ffffff;
   text-decoration: none;
   font-size: 0.9rem;

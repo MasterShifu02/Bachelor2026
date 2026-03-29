@@ -26,7 +26,7 @@ export function Header() {
   }
 
   return (
-    <header>
+    <header className="header-total">
       <div className="header-div">
 
         {/* LOGO */}
