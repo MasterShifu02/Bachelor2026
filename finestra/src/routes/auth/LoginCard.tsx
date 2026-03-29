@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-import { Button } from '@/components/ui/button'
+import { Button } from "../../Components/ui/button"
 import {
   Card,
   CardContent,
@@ -8,37 +9,65 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "../../Components/ui/card"
+
+import { login } from "@/services/authService"
 
 export function LoginCard() {
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState("test@butikk.no")
+  const [password, setPassword] = useState("Test@123")
+
+  async function handleLogin() {
+    try {
+      await login(email, password)
+      navigate("/dashboard")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message)
+      } else {
+        alert("Login feilet")
+      }
+    }
+  }
+
   return (
     <Card className="login-card">
       <CardHeader className="login-header">
         <div className="login-copy">
           <CardTitle>Logg inn</CardTitle>
           <CardDescription>
-            Skriv inn brukernavn og passord for å logge inn på kontoen din.
+            Skriv inn brukernavn og passord for å logge inn.
           </CardDescription>
         </div>
       </CardHeader>
+
       <CardContent className="login-content">
         <div className="login-field">
-          <label htmlFor="email">Brukernavn</label>
+          <label>Brukernavn</label>
           <input
             className="login-input"
-            id="email"
             type="email"
-            placeholder="eksempel@eksempel.no"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+
         <div className="login-field">
-          <label htmlFor="password">Passord</label>
-          <input className="login-input" id="password" type="password" />
+          <label>Passord</label>
+          <input
+            className="login-input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
       </CardContent>
+
       <CardFooter className="login-footer">
-        <Button asChild className="login-button" size="lg">
-          <Link to="/dashboard">Logg inn</Link>
+        <Button className="login-button" size="lg" onClick={handleLogin}>
+          Logg inn
         </Button>
       </CardFooter>
     </Card>
