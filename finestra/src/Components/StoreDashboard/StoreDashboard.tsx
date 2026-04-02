@@ -1,22 +1,42 @@
 import NavigationButton from "../NavigationButton/NavigationButton";
 import CaseTable from "../CaseTable/CaseTable";
 import { FilterBar } from "../FilterBar/FilterBar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { dummyCases, statuses } from "../FilterBar/dummyCases";
+import { getCases, type CaseListItem } from "@/services/caseService";
+import { set } from "zod";
 
 function StoreDashboard() {
+  const [casesData, setCasesData] = useState<CaseListItem[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  //Kodesnutter for filtering og søk
   const [selectedStore, setSelectedStore] = useState("");
-
-  //Kodesnutter for filtering av status på saker
   const [selectedStatus, setSelectedStatus] = useState("");
-
-  //Kodesnutter for å søke etter saker
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    async function fetchCases() {
+      console.log("Henter saker...");
+      try {
+        const data = await getCases();
+        setCasesData(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCases();
+  }, []);
+  if (loading) return <p>Laster inn side...</p>;
+  if (error) return <p>Det skjedde en feil: {error}</p>;
+
   //Filteringslogikk
-  const filteredCases = dummyCases.filter((caseItem) => {
+  const filteredCases = (casesData ?? []).filter((caseItem) => {
     const matchesStore =
-      selectedStore === "" || caseItem.store === selectedStore;
+      selectedStore === "" || caseItem.stores.name === selectedStore;
 
     const matchesStatus =
       selectedStatus === "" || caseItem.status === selectedStatus;

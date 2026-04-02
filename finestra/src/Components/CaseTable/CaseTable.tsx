@@ -9,8 +9,8 @@ import {
 } from "@/Components/ui/table";
 import type { Case } from "../FilterBar/dummyCases";
 import { useNavigate } from "react-router-dom";
-
-function CaseTable({ allCases }: { allCases: Case[] }) {
+import { type CaseListItem } from "@/services/caseService";
+function CaseTable({ allCases }: { allCases: CaseListItem[] | null }) {
   const navigate = useNavigate();
   return (
     <Table className="table-fixed w-full">
@@ -24,16 +24,16 @@ function CaseTable({ allCases }: { allCases: Case[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {allCases.map((caseItem) => (
+        {allCases?.map((caseItem) => (
           <TableRow
             key={caseItem.id}
             onClick={() => navigate(`./cases/${caseItem.id}`)}
           >
             <TableCell>{caseItem.id}</TableCell>
-            <TableCell>{caseItem.title}</TableCell>
-            <TableCell>{caseItem.store}</TableCell>
+            <TableCell>{caseItem.damage_type}</TableCell>
             <TableCell>{caseItem.status}</TableCell>
-            <TableCell>{caseItem.createdAt}</TableCell>
+            <TableCell>{caseItem.stores.name}</TableCell>
+            <TableCell>{caseItem.updated_at}</TableCell>
           </TableRow>
         ))}
       </TableBody>
