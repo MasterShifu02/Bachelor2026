@@ -1,0 +1,20 @@
+.case-event-card{
+position: relative;
+padding: 12px 16px;
+margin-left: 32px;
+cursor: default;
+border-bottom: 1px solid #e5e7eb;
+min-height: 90px; /* Brukt fra chat*/
+}
+
+.case-event-card h3{
+margin: 0;
+font-size: 14px;
+font-weight: 500;
+
+}
+.case-event-card p {
+margin: 4px 0 0 0 ;
+font-size: 12px;
+color: #8a9199;
+}
