@@ -1,0 +1,90 @@
+case-page {
+  padding: 24px;
+  background: #f3f3f3;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.case-page__header {
+  margin-bottom: 24px;
+}
+
+.case-page__breadcrumb {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  color: #5f6368;
+}
+
+.case-page__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.case-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 340px;
+  grid-template-areas:
+    "customer product sidebar"
+    "caseinfo caseinfo sidebar";
+  gap: 24px;
+  align-items: start;
+}
+
+.case-layout__customer {
+  grid-area: customer;
+}
+
+.case-layout__product {
+  grid-area: product;
+}
+
+.case-layout__caseinfo {
+  grid-area: caseinfo;
+}
+
+.case-sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.caseInformationContent{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+}
+.page{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/*Case-event listen*/
+.case-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  /* plass til ca 3 kort */
+  max-height: calc((90px * 3) + (12px * 2));
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.case-event-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.case-event-list::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+.case-event-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}

@@ -1,0 +1,17 @@
+.case-information-card {
+border: 1px solid black;
+padding: 16px 20px; 
+width: 100%;
+box-sizing: border-box;
+}
+.case-information-card_title{
+margin-bottom: 20px;
+font-size: large;
+color: #5F6368;
+font-weight: 700;
+}
+.case-information-card_content{
+display: grid;
+grid-template-columns: repeat(2,minmax(0,1fr));
+gap: 20px 50px;
+}

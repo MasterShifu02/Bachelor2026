@@ -1,0 +1,13 @@
+.informationField{
+min-width: 0;
+}
+
+.informationField_label{
+margin-bottom: 4px;
+font-weight: 700;
+color: #5F6368;
+}
+.information-field_value{
+color: #5F6368;
+
+}

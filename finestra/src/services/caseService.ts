@@ -48,7 +48,7 @@ export async function getCase(caseId: string): Promise<CaseListItem> {
     .select(`
       *,
       customers (first_name,last_name),
-      products (product_name,model),
+      products (product_name,model,serial_number,spacer_number,purchase_date,created_at),
       stores (name)
     `)
     .eq("id", caseId)
