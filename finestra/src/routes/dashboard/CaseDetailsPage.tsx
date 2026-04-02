@@ -4,23 +4,20 @@ import "./CaseDetailPage.css";
 import { CaseInformationCard } from "@/Components/CaseInformationContainer/CaseInformationCard/CaseInformationCard/CaseInformationCard/CaseInformationCard";
 import ActionButton from "@/Components/ActionButton/ActionButton";
 import CaseEventCard from "@/Components/CaseEventCard/CaseEventCard";
-
-/* 
 import { useParams } from "react-router-dom";
 import { getCase } from "@/services/caseService";
 import type { CaseListItem } from "@/services/caseService";
 import { useState, useEffect } from "react";
 
-const { caseId } = useParams();
-
+export function CaseDetailsPage() {
+  const { caseId } = useParams();
   const [caseData, setCaseData] = useState<CaseListItem | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [Loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCase() {
       if (!caseId) return;
-
       try {
         const data = await getCase(caseId);
         setCaseData(data);
@@ -32,12 +29,10 @@ const { caseId } = useParams();
     }
     fetchCase();
   }, [caseId]);
-  if (loading) return <p>Laster...</p>;
-  if (error) return <p>error</p>;
+  if (Loading) return <p>Laster inn side...</p>;
+  if (error) return <p>Det skjedde en feil: {error}</p>;
   if (!caseData) return <p>Fant ingen sak</p>;
-*/
 
-export function CaseDetailsPage() {
   return (
     <main className="page">
       <div className="caseInformationContent">
@@ -46,35 +41,59 @@ export function CaseDetailsPage() {
             title="Kundedetaljer"
             className="border border-neutral-400 bg neutral-100 p-4"
           >
-            <InformationField label="Test-id:" value="Reodor" />
-            <InformationField label="Etternavn:" value="Benjisen" />
-            <InformationField label="E-Mail:" value="benji123@gmail.com" />
+            <InformationField
+              label="Fornavn:"
+              value={caseData.customers.first_name}
+            />
+            <InformationField
+              label="Etternavn:"
+              value={caseData.customers.last_name}
+            />
+            <InformationField
+              label="E-Mail:"
+              value={caseData.customers.email}
+            />
           </CaseInformationCard>
 
-          <CaseInformationCard title="Kundedetaljer">
+          <CaseInformationCard title="Produktdetaljer">
             <InformationField
               label="Produktnavn / modell:"
-              value="Schweizervindu 8403.a"
+              value={`${caseData.products.product_name} / ${caseData.products.model}`}
             />
-            <InformationField label="Spacernummer:" value="NO-3989.1A92" />
-            <InformationField label="Kjøpsdato:" value="2025-05.19" />
-            <InformationField label="Serienummer:" value="45-AR-859.3 " />
-            <InformationField label="Ordre:" value="9" />
+            <InformationField
+              label="Spacernummer:"
+              value={caseData.products.spacer_number}
+            />
+            <InformationField
+              label="Kjøpsdato:"
+              value={caseData.products.purchase_date}
+            />
+            <InformationField
+              label="Serienummer:"
+              value={caseData.products.serial_number}
+            />
+            <InformationField
+              label="Ordrenummer:"
+              value="Her var det ikke noen ordrenummer"
+            />
           </CaseInformationCard>
         </section>
         <section>
           <CaseInformationCard title="Saksinformasjon">
-            <InformationField label="Sakstype:" value="Reklamasjon" />
-            <InformationField label="Butikk:" value="Zwolle" />
+            <InformationField label="Sakstype:" value={caseData.case_type} />
+            <InformationField label="Butikk:" value={caseData.stores.name} />
             <InformationField
               label="Når problemet oppsto:"
-              value="ikke oppgitt"
+              value={caseData.problem_date}
             />
-            <InformationField label="Serienummer:" value="45-AR-859.3 " />
-            <InformationField label="Opprettelsesdato:" value="18-04-2024" />
+
+            <InformationField
+              label="Opprettelsesdato:"
+              value={caseData.created_at}
+            />
             <InformationField
               label="Beskrivelse:"
-              value="Knust i høyre hjørnet.På vinduen mot hagen"
+              value={caseData?.description || "Ingen beskrivelse tilgjengelig"}
             />
           </CaseInformationCard>
         </section>
