@@ -10,17 +10,22 @@ import {
 import type { Case } from "../FilterBar/dummyCases";
 import { useNavigate } from "react-router-dom";
 import { type CaseListItem } from "@/services/caseService";
-function CaseTable({ allCases }: { allCases: CaseListItem[] | null }) {
+import { type Column } from "../StoreDashboard/StoreDashboard";
+function CaseTable({
+  allCases,
+  columns,
+}: {
+  allCases: CaseListItem[] | null;
+  columns: Column[];
+}) {
   const navigate = useNavigate();
   return (
     <Table className="table-fixed w-full">
       <TableHeader>
         <TableRow>
-          <TableHead>Ordrenummer</TableHead>
-          <TableHead>Type sak</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Butikk</TableHead>
-          <TableHead>Sist oppdatert</TableHead>
+          {columns.map((column) => (
+            <TableHead>{column.heading}</TableHead>
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>
