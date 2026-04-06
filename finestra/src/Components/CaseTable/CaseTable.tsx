@@ -24,7 +24,7 @@ function CaseTable({
       <TableHeader>
         <TableRow>
           {columns.map((column) => (
-            <TableHead>{column.heading}</TableHead>
+            <TableHead key={column.heading}>{column.heading}</TableHead>
           ))}
         </TableRow>
       </TableHeader>
@@ -34,11 +34,11 @@ function CaseTable({
             key={caseItem.id}
             onClick={() => navigate(`./cases/${caseItem.id}`)}
           >
-            <TableCell>{caseItem.id}</TableCell>
-            <TableCell>{caseItem.damage_type}</TableCell>
-            <TableCell>{caseItem.status}</TableCell>
-            <TableCell>{caseItem.stores.name}</TableCell>
-            <TableCell>{caseItem.updated_at}</TableCell>
+            {columns.map((column) => (
+              <TableCell key={column.heading}>
+                {column.accessor(caseItem)}
+              </TableCell>
+            ))}
           </TableRow>
         ))}
       </TableBody>

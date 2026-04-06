@@ -9,17 +9,17 @@ import { set } from "zod";
 //Definerer type av kolonner
 export type Column = {
   heading: string;
-  value: string;
+  accessor: (caseItem: CaseListItem) => React.ReactNode;
 };
 
 function StoreDashboard() {
   //Kolonner for tabellinnhold:
   const columns: Column[] = [
-    { heading: "Ordrenummer", value: "name" },
-    { heading: "Type sak", value: "damage_type" },
-    { heading: "Status", value: "status" },
-    { heading: "kjutikk", value: "stores.name" },
-    { heading: "Sist oppdatert", value: "updated_at" },
+    { heading: "Ordrenummer", accessor: (caseItem) => caseItem.id },
+    { heading: "Type sak", accessor: (caseItem) => caseItem.damage_type },
+    { heading: "Status", accessor: (caseItem) => caseItem.status },
+    { heading: "Butikk", accessor: (caseItem) => caseItem.stores.name },
+    { heading: "Sist oppdatert", accessor: (caseItem) => caseItem.updated_at },
   ];
 
   const [casesData, setCasesData] = useState<CaseListItem[] | null>(null);
