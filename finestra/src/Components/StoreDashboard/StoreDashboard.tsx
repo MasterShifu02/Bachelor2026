@@ -6,7 +6,22 @@ import { dummyCases, statuses } from "../FilterBar/dummyCases";
 import { getCases, type CaseListItem } from "@/services/caseService";
 import { set } from "zod";
 
+//Definerer type av kolonner
+export type Column = {
+  heading: string;
+  accessor: (caseItem: CaseListItem) => React.ReactNode;
+};
+
 function StoreDashboard() {
+  //Kolonner for tabellinnhold:
+  const columns: Column[] = [
+    { heading: "Ordrenummer", accessor: (caseItem) => caseItem.id },
+    { heading: "Type sak", accessor: (caseItem) => caseItem.damage_type },
+    { heading: "Status", accessor: (caseItem) => caseItem.status },
+    { heading: "Butikk", accessor: (caseItem) => caseItem.stores.name },
+    { heading: "Sist oppdatert", accessor: (caseItem) => caseItem.updated_at },
+  ];
+
   const [casesData, setCasesData] = useState<CaseListItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,7 +84,7 @@ function StoreDashboard() {
       </div>
 
       <div className="flex justify-center mb-16">
-        <CaseTable allCases={filteredCases} />
+        <CaseTable allCases={filteredCases} columns={columns} />
       </div>
     </div>
   );
