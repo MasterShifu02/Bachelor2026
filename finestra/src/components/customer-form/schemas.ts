@@ -56,27 +56,22 @@ export const customerFormSchema = z.object({
 
 
 //kunde info schema
-  contactName: z
-  .string()
-  .min(2, {
-    message: "Skriv inn navn.",
-  })
-  .max(100, {
-    message: "Navn er for langt.",
-  }),
+  firstName: z
+    .string()
+    .min(2, { message: "Skriv inn fornavn." })
+  .max(50, { message: "Fornavn er for langt." }),
 
-  telefonNumber: z
-  .string()
-  .min(8, {
-    message: "Skriv inn telefonnummer.",
-  })
-  .max(8, {
-    message: "Telefonnummer er for langt.",
-  }),
+  lastName: z
+    .string()
+    .min(2, { message: "Skriv inn etternavn." })
+    .max(50, { message: "Etternavn er for langt." }),
 
-  email: z.email({
-    message: "Skriv inn en gyldig e-postadresse.",
-  }),
+  phone: z.string()
+    .min(8, { message: "Skriv inn telefonnummer." })
+    .max(15)
+    .optional(),
+
+  email: z.email({ message: "Skriv inn en gyldig e-postadresse." }),
 
 //Sluttlig bekreftelse
   confirmCorrectInfo: z
@@ -103,8 +98,9 @@ export const customerFormDefaultValues: CustomerFormValues = {
   problemDate: "",
 
 
-  contactName: "",
-  telefonNumber: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
   email: "",
 
 

@@ -1,67 +1,157 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Label } from "../../Components/ui/label";
+import { Button } from "../../Components/ui/button";
+import { Separator } from "../../Components/ui/separator";
 
-import { customerFormDefaultValues, customerFormSchema, type CustomerFormValues } from "./schemas";
-import { getProblemTypeDescription, getProblemTypeDocumentationHelpText } from "./ConfigForm";
+import {
+  customerFormDefaultValues,
+  customerFormSchema,
+  type CustomerFormValues,
+} from "./schemas";
 
-import { ProductInfo } from "./sections/ProductInfo";
-import { ProblemInfo } from "./sections/ProblemInfo";
-import { ContactInfo } from "./sections/ContactInfo";
+import {
+  getProblemTypeDescription,
+  getProblemTypeDocumentationHelpText,
+} from "./ConfigForm";
 
+import { ProductInfo } from "../../Components/customer-form/sections/ProductInfo";
+import { ProblemInfo } from "../../Components/customer-form/sections/ProblemInfo";
+import { ContactInfo } from "../../Components/customer-form/sections/ContactInfo";
+
+import { toast } from "sonner"
+// import { useNavigate } from "react-router-dom"
 
 type CustomerFormProps = {
   token: string;
 };
 
 export function CustomerForm({ token }: CustomerFormProps) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(customerFormSchema),
     defaultValues: customerFormDefaultValues,
     mode: "onSubmit",
   });
 
-  const { register, watch, handleSubmit, formState } = form;
+  const { register, watch, handleSubmit, reset, formState } = form;
   const { errors, isSubmitting, isSubmitSuccessful } = formState;
 
   const selectedProblemType = watch("problemType");
-
   const problemDescriptionHelpText = getProblemTypeDescription(selectedProblemType);
-
   const documentationHelpText = getProblemTypeDocumentationHelpText(selectedProblemType);
 
-  const onSubmit = (values: CustomerFormValues) => {
-    console.log("Customer form submit:", { token, values });
+  // Prefill via token
+  useEffect(() => {
+    async function fetchCaseData() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-token?token=${token}`
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || "Ukjent feil");
+          setLoading(false);
+          return;
+        }
+
+        // Prefill form
+        reset({
+          firstName: data.firstName ?? "",
+          lastName: data.lastName ?? "",
+          email: data.email ?? "",
+          phone: data.phone ?? "",
+
+          productNameModel: data.productNameModel ?? "",
+          productSpacerNumber: data.productSpacerNumber ?? "",
+          productSerialNumber: data.productSerialNumber ?? "",
+          productReceitNumber: data.productReceitNumber ?? "",
+          productPurchaseDate: data.productPurchaseDate ?? "",
+
+          problemType: data.problemType ?? "",
+          problemDescription: data.problemDescription ?? "",
+          problemDate: data.problemDate ?? "",
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Kunne ikke hente saken. Prøv igjen senere.");
+        setLoading(false);
+      }
+    }
+
+    fetchCaseData();
+  }, [token, reset]);
+
+  // const navigate = useNavigate()
+
+  const onSubmit = async (values: CustomerFormValues) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-token?token=${token}&action=submit`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      )
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Noe gikk galt ved innsending")
+      }
+
+      toast.success("Skjema sendt inn!")
+
+      // redirect etter litt delay
+      // setTimeout(() => {
+      //   navigate("/takk") // eller custom page
+      // }, 1500)
+
+    } catch (err) {
+      console.error("Submit failed:", err)
+
+      toast.error(
+        err instanceof Error ? err.message : "Noe gikk galt"
+      )
+    }
   };
 
+  if (loading) return <div>Laster...</div>;
+  if (error) return <div>Feil: {error}</div>;
+
+  if (isSubmitSuccessful) {
+  return (
+      <main className="mx-auto max-w-4xl border bg-background px-4 py-6 text-center">
+        <h2 className="text-2xl font-bold mb-2">Takk! 🎉</h2>
+        <p>Skjemaet er sendt inn.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-4xl border bg-background px-4 py-6">
-
-
       <header className="space-y-2">
         <h1 className="text-2xl font-bold">Skjema for saksopprettelse</h1>
-        <h2 className="mb-4">Vennligst fyll ut skjemaet nedenfor og send inn din sak.</h2>
+        <h2 className="mb-4">
+          Vennligst fyll ut skjemaet nedenfor og send inn din sak.
+        </h2>
       </header>
-      
 
       <Separator className="p-1 mb-4" />
-
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+        <ProductInfo register={register} errors={errors} />
 
-
-        <ProductInfo
-          register={register}
-          errors={errors}
-        />
-
-
-      <Separator className="p-1 mb-4" />
-
+        <Separator className="p-1 mb-4" />
 
         <ProblemInfo
           register={register}
@@ -71,18 +161,11 @@ export function CustomerForm({ token }: CustomerFormProps) {
           documentationHelpText={documentationHelpText}
         />
 
+        <Separator className="p-1 mb-4" />
 
-      <Separator className="p-1 mb-4" />
+        <ContactInfo register={register} errors={errors} />
 
-
-        <ContactInfo
-          register={register}
-          errors={errors}
-        />
-
-
-      <Separator className="p-1 mb-4" />
-
+        <Separator className="p-1 mb-4" />
 
         <section className="space-y-3">
           <div className="flex items-start gap-3">
@@ -97,22 +180,13 @@ export function CustomerForm({ token }: CustomerFormProps) {
           </div>
 
           {errors.confirmCorrectInfo && (
-            <p className="text-sm text-red-600">
-              {errors.confirmCorrectInfo.message}
-            </p>
+            <p className="text-sm text-red-600">{errors.confirmCorrectInfo.message}</p>
           )}
 
           <Button type="submit" disabled={isSubmitting}>
-            Send inn
+            {isSubmitting ? "Sender..." : "Send inn"}
           </Button>
-
-          {isSubmitSuccessful && (
-            <p className="text-green-500 font-medium">
-              Skjemaet er sendt in
-            </p>
-          )}
         </section>
-
       </form>
     </main>
   );

@@ -53,6 +53,7 @@
  margin: 15px;
 }
 
+
 @media screen and (max-width: 800px) {
     .form-container{
         grid-template-columns: 1fr;

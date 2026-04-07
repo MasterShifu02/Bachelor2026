@@ -1,8 +1,8 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { Textarea } from "../../ui/textarea";
+import { Label } from "../../ui/label";
+import { Separator } from "../../ui/separator";
 
 
 import { problemTypeOptions } from "../ConfigForm";
@@ -81,6 +81,27 @@ export function ProblemInfo(props: ProblemInfoProps) {
         {errors.problemDescription && (
           <p className="text-sm text-red-600">
             {errors.problemDescription.message}
+          </p>
+        )}
+      </section>
+
+      <Separator />
+
+      <section className="space-y-3">
+        <Label htmlFor="problemDate">
+          Når oppsto problemet (valgfritt)
+        </Label>
+
+        <input
+          id="problemDate"
+          type="date"
+          {...register("problemDate")}
+          className="w-full border p-2"
+        />
+
+        {errors.problemDate && (
+          <p className="text-sm text-red-600">
+            {errors.problemDate.message}
           </p>
         )}
       </section>
