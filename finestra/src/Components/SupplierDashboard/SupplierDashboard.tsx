@@ -16,7 +16,7 @@ function SupplierDashboard() {
     { heading: "Ordrenummer", accessor: (caseItem) => caseItem.id },
     { heading: "Type sak", accessor: (caseItem) => caseItem.damage_type },
     { heading: "Status", accessor: (caseItem) => caseItem.status },
-    { heading: "Butikk", accessor: (caseItem) => caseItem.stores.name },
+    { heading: "navn", accessor: (caseItem) => caseItem.stores.name },
     { heading: "Sist oppdatert", accessor: (caseItem) => caseItem.updated_at },
   ];
 

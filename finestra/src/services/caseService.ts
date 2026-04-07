@@ -28,7 +28,7 @@ export async function getCases(): Promise<CaseListItem[]> {
     .from("cases")
     .select(`
       *,
-      customers (first_name,last_name),
+      customers (first_name,last_name,email,phone),
       products (product_name,model),
       stores (name)
     `)
@@ -47,7 +47,7 @@ export async function getCase(caseId: string): Promise<CaseListItem> {
     .from("cases")
     .select(`
       *,
-      customers (first_name,last_name),
+      customers (first_name,last_name,email,phone),
       products (product_name,model,serial_number,spacer_number,purchase_date,created_at),
       stores (name)
     `)

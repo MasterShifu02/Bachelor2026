@@ -16,10 +16,39 @@ function StoreDashboard() {
   //Kolonner for tabellinnhold:
   const columns: Column[] = [
     { heading: "Ordrenummer", accessor: (caseItem) => caseItem.id },
+    {
+      heading: "Fornavn",
+      accessor: (caseItem) => caseItem.customers.first_name,
+    },
+    {
+      heading: "Etternavn",
+      accessor: (caseItem) => caseItem.customers.last_name,
+    },
+    { heading: "E-post", accessor: (caseItem) => caseItem.customers.email },
     { heading: "Type sak", accessor: (caseItem) => caseItem.damage_type },
     { heading: "Status", accessor: (caseItem) => caseItem.status },
-    { heading: "Butikk", accessor: (caseItem) => caseItem.stores.name },
-    { heading: "Sist oppdatert", accessor: (caseItem) => caseItem.updated_at },
+    {
+      heading: "Sist oppdatert",
+      accessor: (caseItem) =>
+        caseItem.updated_at
+          ? new Intl.DateTimeFormat("nb-NO", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(caseItem.updated_at))
+          : "-",
+    },
+    {
+      heading: "Opprettet",
+      accessor: (caseItem) =>
+        caseItem.created_at
+          ? new Intl.DateTimeFormat("nb-NO", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(caseItem.created_at))
+          : "-",
+    },
   ];
 
   const [casesData, setCasesData] = useState<CaseListItem[] | null>(null);
