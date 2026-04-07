@@ -1,6 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import { Label } from "@/components/ui/label";
+import { Label } from "../../ui/label";
 
 import type { CustomerFormValues } from "../schemas";
 
@@ -99,7 +99,7 @@ export function ProductInfo(props: ProductInfoProps) {
 
                     <input
                         id="productPurchaseDate"
-                        type="text"
+                        type="date"
                         placeholder="Skriv produkt serienummer her"
                         {...register("productPurchaseDate")}
                         className="w-full border p-2"

@@ -1,14 +1,12 @@
 import { useParams } from "react-router-dom";
-import { CustomerForm } from "@/components/customer-form/CustomerForm";
-
+import { CustomerForm } from "../../Components/customer-form/CustomerForm";
 
 export function CustomerFormPage() {
   const { token } = useParams<{ token: string }>();
 
-  if (!token) {
-    return <main className="p-4">Ugyldig lenke: mangler token.</main>;
-  }
+  if (!token) return <div>Ugyldig lenke</div>;
 
+  // Sender URL-token direkte til CustomerForm
   return <CustomerForm token={token} />;
 }
 

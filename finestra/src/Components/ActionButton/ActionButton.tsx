@@ -5,6 +5,7 @@ type ActionButtonProps = {
   variant: "primary" | "secondary";
   type?: "button" | "submit" | "reset";
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 };
 
 export default function ActionButton({
@@ -12,12 +13,14 @@ export default function ActionButton({
   variant,
   type = "button",
   onClick,
+  disabled,
 }: ActionButtonProps) {
   return (
     <button
       type={type}
       className={`actionButtonStyle ${variant}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {name}
     </button>

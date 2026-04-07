@@ -55,7 +55,7 @@ serve(async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, secretKey)
 
     const body = await req.json()
-    const { first_name, last_name, email, message, created_by } = body
+    const { first_name, last_name, email, phone, message, created_by } = body
 
     // ------------------------
     // 2. Hent profil + store email
@@ -77,7 +77,7 @@ serve(async (req: Request): Promise<Response> => {
     // ------------------------
     const { data: customer, error: customerError } = await supabase
       .from("customers")
-      .insert({ first_name, last_name, email })
+      .insert({ first_name, last_name, email, phone: phone || null })
       .select()
       .single()
 

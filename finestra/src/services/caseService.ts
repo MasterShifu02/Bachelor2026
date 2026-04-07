@@ -47,7 +47,7 @@ export async function getCase(caseId: string): Promise<CaseListItem> {
     .from("cases")
     .select(`
       *,
-      customers (first_name,last_name),
+      customers (first_name,last_name,email,phone),
       products (product_name,model,serial_number,spacer_number,purchase_date,created_at),
       stores (name)
     `)
@@ -92,6 +92,7 @@ export async function createCase(payload: {
   first_name: string
   last_name: string
   email: string
+  phone?: string | null
   message?: string
   created_by: string
   }): Promise<CreateCaseResult> {
@@ -110,6 +111,7 @@ export async function createCase(payload: {
     throw new Error("Du må være innlogget for å opprette sak")
   }
 
+  console.log("PAYLOAD:", payload)
   const { data, error } = await supabase.functions.invoke("create-case", {
     body: payload,
     headers: {

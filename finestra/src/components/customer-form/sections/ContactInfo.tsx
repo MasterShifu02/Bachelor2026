@@ -1,6 +1,6 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import { Label } from "@/components/ui/label";
+import { Label } from "../../ui/label";
 
 import type { CustomerFormValues } from "../schemas";
 
@@ -19,63 +19,62 @@ export function ContactInfo(props: ContactInfoProps) {
 
         <div className="grid gap-4 md:grid-cols-2">
 
-          <article className="space-y-2">
-
-            <Label htmlFor="contactName">Navn *</Label>
-
+        <article className="space-y-2">
+            <Label htmlFor="firstName">Fornavn *</Label>
             <input
-              id="contactName"
-              type="text"
-              placeholder="Skriv kontakt navn her"
-              {...register("contactName")}
-              className="w-full border p-2"
-
+            id="firstName"
+            type="text"
+            placeholder="Skriv fornavn"
+            {...register("firstName")}
+            className="w-full border p-2"
             />
-              {errors.contactName && (
-                  <p className="text-sm text-red-600">
-                      {errors.contactName.message}
-                  </p>
-              )}
+            {errors.firstName && (
+            <p className="text-sm text-red-600">{errors.firstName.message}</p>
+            )}
+        </article>
 
-          </article>
+        <article className="space-y-2">
+            <Label htmlFor="lastName">Etternavn *</Label>
+            <input
+            id="lastName"
+            type="text"
+            placeholder="Skriv etternavn"
+            {...register("lastName")}
+            className="w-full border p-2"
+            />
+            {errors.lastName && (
+            <p className="text-sm text-red-600">{errors.lastName.message}</p>
+            )}
+        </article>
 
-          <article className="space-y-2">
+        <article className="space-y-2">
+            <Label htmlFor="phone">Telefon *</Label>
+            <input
+            id="phone"
+            type="text"
+            inputMode="numeric"
+            placeholder="Skriv telefonnummer"
+            {...register("phone")}
+            className="w-full border p-2"
+            />
+            {errors.phone && (
+            <p className="text-sm text-red-600">{errors.phone.message}</p>
+            )}
+        </article>
 
-              <Label htmlFor="telefonNumber">Telefon *</Label>
-
-              <input
-                  id="telefonNumber"
-                  type="text"
-                  placeholder="Skriv din telefon her"
-                  {...register("telefonNumber")}
-                  className="w-full border p-2"
-              />
-              {errors.telefonNumber && (
-                  <p className="text-sm text-red-600">
-                      {errors.telefonNumber.message}
-                  </p>
-              )}
-
-          </article>
-
-          <article className="space-y-2">
-
-              <Label htmlFor="email">Email *</Label>
-
-              <input
-                  id="email"
-                  type="text"
-                  placeholder="Skriv din email her"
-                  {...register("email")}
-                  className="w-full border p-2"
-              />
-              {errors.email && (
-                  <p className="text-sm text-red-600">
-                      {errors.email.message}
-                  </p>
-              )}
-
-          </article>
+        <article className="space-y-2">
+            <Label htmlFor="email">Email *</Label>
+            <input
+            id="email"
+            type="email"
+            placeholder="Skriv email"
+            {...register("email")}
+            className="w-full border p-2"
+            />
+            {errors.email && (
+            <p className="text-sm text-red-600">{errors.email.message}</p>
+            )}
+        </article>
 
         </div>
       </section>

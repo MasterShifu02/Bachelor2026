@@ -1,120 +1,308 @@
 /// <reference types="deno" />
 // @ts-ignore
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts"
 // @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SECRET_KEY")!
-)
+const FRONTEND_URL = Deno.env.get("FRONTEND_URL") || "http://localhost:5173"
 
 serve(async (req: Request) => {
-  const url = new URL(req.url)
-  const token = url.searchParams.get("token")
+  const origin = req.headers.get("origin") ?? FRONTEND_URL
+  const requestHeaders =
+    req.headers.get("access-control-request-headers") ??
+    "authorization, x-client-info, apikey, content-type"
 
-  if (!token) {
-    return new Response(JSON.stringify({ error: "Missing token" }), { status: 400 })
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": requestHeaders,
+    "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
   }
 
-  // Finn saken
-  const { data: caseData, error } = await supabase
-    .from("cases")
-    .select("*")
-    .eq("public_token", token)
-    .single()
-
-  if (error || !caseData) {
-    return new Response(JSON.stringify({ error: "Invalid token" }), { status: 404 })
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders })
   }
 
-  if (caseData.token_used) {
-    return new Response(JSON.stringify({ error: "Token already used" }), { status: 403 })
+  const headers = {
+    "Content-Type": "application/json",
+    ...corsHeaders,
   }
 
-  if (caseData.token_expires_at && new Date(caseData.token_expires_at) < new Date()) {
-    return new Response(JSON.stringify({ error: "Token expired" }), { status: 403 })
-  }
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("EDGE_SECRET_KEY")!
+    )
 
-  // -------------------
-  // GET → hent saken
-  // -------------------
-  if (req.method === "GET") {
-    return new Response(JSON.stringify(caseData), {
-      headers: { "Content-Type": "application/json" },
-    })
-  }
+    const url = new URL(req.url)
+    const token = url.searchParams.get("token")
+    const action = url.searchParams.get("action")
 
-  // -------------------
-  // POST → oppdater skjema
-  // -------------------
-  if (req.method === "POST" && url.pathname === "/submit") {
-    const body = await req.json()
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Missing token" }), { status: 400, headers })
+    }
 
-    const { data, error } = await supabase
+    // -------------------
+    // HENT ALT RELATERT DATA
+    // -------------------
+    const { data: caseData, error } = await supabase
       .from("cases")
-      .update({
-        ...body,
-        status: "submitted_by_customer",
-        token_used: true,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", caseData.id)
-      .select()
+      .select(`
+        *,
+        customers (
+          id,
+          first_name,
+          last_name,
+          email,
+          phone
+        ),
+        products (
+          id,
+          product_name,
+          spacer_number,
+          serial_number,
+          order_number,
+          purchase_date
+        )
+      `)
+      .eq("public_token", token)
       .single()
 
-    if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 })
-
-    await supabase.from("case_events").insert({
-      case_id: caseData.id,
-      actor_name: "Customer",
-      actor_role: "customer",
-      event_type: "submitted_form",
-      description: "Customer submitted case form",
-    })
-
-    return new Response(JSON.stringify(data), {
-      headers: { "Content-Type": "application/json" },
-    })
-  }
-
-  // -------------------
-  // POST /upload → last opp vedlegg
-  // -------------------
-  if (req.method === "POST" && url.pathname === "/upload") {
-    const formData = await req.formData()
-    const file = formData.get("file") as File
-
-    if (!file) return new Response(JSON.stringify({ error: "No file provided" }), { status: 400 })
-
-    const filePath = `${caseData.id}/${file.name}`
-
-    const { error: uploadError } = await supabase.storage
-      .from("attachments")
-      .upload(filePath, file.stream(), {
-        cacheControl: "3600",
-        upsert: false,
+    if (error || !caseData) {
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 404,
+        headers,
       })
-
-    if (uploadError) {
-      return new Response(JSON.stringify({ error: uploadError.message }), { status: 500 })
     }
 
-    // Lag attachment record i DB
-    const { error: dbError } = await supabase
-      .from("attachments")
-      .insert({
+    // -------------------
+    // Token checks
+    // -------------------
+    if (caseData.token_used) {
+      return new Response(JSON.stringify({ error: "Token already used" }), {
+        status: 403,
+        headers,
+      })
+    }
+
+    if (
+      caseData.token_expires_at &&
+      new Date(caseData.token_expires_at) < new Date()
+    ) {
+      return new Response(JSON.stringify({ error: "Token expired" }), {
+        status: 403,
+        headers,
+      })
+    }
+
+    // -------------------
+    // GET → PREFILL DATA
+    // -------------------
+    if (req.method === "GET") {
+      return new Response(
+        JSON.stringify({
+          // CUSTOMER
+          firstName: caseData.customers?.first_name || "",
+          lastName: caseData.customers?.last_name || "",
+          email: caseData.customers?.email || "",
+          phone: caseData.customers?.phone || "",
+
+          // PRODUCT
+          productNameModel: caseData.products?.product_name || "",
+          productSpacerNumber: caseData.products?.spacer_number || "",
+          productSerialNumber: caseData.products?.serial_number || "",
+          productReceitNumber: caseData.products?.order_number || "",
+          productPurchaseDate: caseData.products?.purchase_date || "",
+
+          // CASE
+          problemType: caseData.damage_type || "",
+          problemDescription: caseData.description || "",
+          problemDate: caseData.problem_date || "",
+        }),
+        { status: 200, headers }
+      )
+    }
+
+    // -------------------
+    // POST → SUBMIT
+    // -------------------
+    if (req.method === "POST" && action === "submit") {
+      const body = await req.json()
+
+      const {
+        firstName,
+        lastName,
+        phone,
+        email,
+        productNameModel,
+        productSpacerNumber,
+        productSerialNumber,
+        productReceitNumber,
+        productPurchaseDate,
+        problemType,
+        problemDescription,
+        problemDate,
+      } = body
+
+      // -------------------
+      // 1. UPDATE CUSTOMER
+      // -------------------
+      const { error: customerError } = await supabase
+        .from("customers")
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          phone: phone || null,
+        })
+        .eq("id", caseData.customer_id)
+
+      if (customerError) {
+        return new Response(JSON.stringify({ error: customerError.message }), {
+          status: 500,
+          headers,
+        })
+      }
+
+      // -------------------
+      // 2. UPSERT PRODUCT (unngå duplikater)
+      // -------------------
+      let productId = caseData.product_id
+
+      if (productId) {
+        // update eksisterende
+        const { error: updateProductError } = await supabase
+          .from("products")
+          .update({
+            product_name: productNameModel,
+            spacer_number: productSpacerNumber,
+            serial_number: productSerialNumber || null,
+            order_number: productReceitNumber,
+            purchase_date: productPurchaseDate || null,
+          })
+          .eq("id", productId)
+
+        if (updateProductError) {
+          return new Response(JSON.stringify({ error: updateProductError.message }), {
+            status: 500,
+            headers,
+          })
+        }
+      } else {
+        // opprett ny
+        const { data: product, error: productError } = await supabase
+          .from("products")
+          .insert({
+            product_name: productNameModel,
+            spacer_number: productSpacerNumber,
+            serial_number: productSerialNumber || null,
+            order_number: productReceitNumber,
+            purchase_date: productPurchaseDate || null,
+          })
+          .select()
+          .single()
+
+        if (productError || !product) {
+          return new Response(JSON.stringify({ error: productError?.message }), {
+            status: 500,
+            headers,
+          })
+        }
+
+        productId = product.id
+      }
+
+      // -------------------
+      // 3. UPDATE CASE
+      // -------------------
+      const { data: updatedCase, error: updateError } = await supabase
+        .from("cases")
+        .update({
+          product_id: productId,
+          damage_type: problemType,
+          description: problemDescription,
+          problem_date: problemDate || null,
+          status: "submitted_by_customer",
+          token_used: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", caseData.id)
+        .select()
+        .single()
+
+      if (updateError) {
+        return new Response(JSON.stringify({ error: updateError.message }), {
+          status: 500,
+          headers,
+        })
+      }
+
+      // -------------------
+      // 4. EVENT LOG
+      // -------------------
+      await supabase.from("case_events").insert({
+        case_id: caseData.id,
+        actor_name: `${firstName} ${lastName}`,
+        actor_role: "customer",
+        event_type: "submitted_form",
+        description: "Customer submitted case form",
+      })
+
+      return new Response(JSON.stringify(updatedCase), {
+        status: 200,
+        headers,
+      })
+    }
+
+    // -------------------
+    // 📎 FILE UPLOAD (uendret)
+    // -------------------
+    if (req.method === "POST" && action === "upload") {
+      const formData = await req.formData()
+      const file = formData.get("file") as File
+
+      if (!file) {
+        return new Response(JSON.stringify({ error: "No file provided" }), {
+          status: 400,
+          headers,
+        })
+      }
+
+      const filePath = `${caseData.id}/${crypto.randomUUID()}-${file.name}`
+
+      const { error: uploadError } = await supabase.storage
+        .from("attachments")
+        .upload(filePath, file.stream())
+
+      if (uploadError) {
+        return new Response(JSON.stringify({ error: uploadError.message }), {
+          status: 500,
+          headers,
+        })
+      }
+
+      await supabase.from("attachments").insert({
         case_id: caseData.id,
         file_url: filePath,
-        uploaded_by: null, // anonym kunde
+        uploaded_by: null,
       })
 
-    if (dbError) {
-      return new Response(JSON.stringify({ error: dbError.message }), { status: 500 })
+      return new Response(JSON.stringify({ message: "File uploaded" }), {
+        status: 200,
+        headers,
+      })
     }
 
-    return new Response(JSON.stringify({ message: "File uploaded successfully" }))
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers,
+    })
+  } catch (err: any) {
+    console.error("ERROR:", err)
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers,
+    })
   }
-
-  return new Response("Method not allowed", { status: 405 })
 })
