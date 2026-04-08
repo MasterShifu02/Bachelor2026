@@ -7,6 +7,7 @@ export type Product = Database["public"]["Tables"]["products"]["Row"]
 export type Store = Database["public"]["Tables"]["stores"]["Row"]
 export type CaseRow = Database["public"]["Tables"]["cases"]["Row"]
 export type CaseEvent = Database["public"]["Tables"]["case_events"]["Row"]
+export type CaseComment = Database["public"]["Tables"]["case_comments"]["Row"]
 
 export type CaseListItem = CaseRow & {
   customers: Customer
@@ -71,6 +72,47 @@ export async function getCaseEvents(caseId: string): Promise<CaseEvent[]> {
   if (error) throw error
 
   return data as CaseEvent[]
+}
+
+// ------------------------------
+// HENT KOMMENTARER
+// ------------------------------
+export async function getCaseComments(caseId: string) {
+  const { data, error } = await supabase
+    .from("case_comments")
+    .select(`
+      *,
+      profiles (name, role)
+    `)
+    .eq("case_id", caseId)
+    .order("created_at")
+
+  if (error) throw error
+  return data
+}
+
+// ------------------------------
+// LEGG TIL KOMMENTAR
+// ------------------------------
+export async function addCaseComment(case_id: string, comment: string) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) throw new Error("Ikke logget inn")
+
+  const { data, error } = await supabase
+    .from("case_comments")
+    .insert({
+      case_id,
+      comment,
+      author_id: user.id,
+    })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
 }
 
 // ------------------------------
