@@ -62,7 +62,7 @@ serve(async (req: Request): Promise<Response> => {
     // ------------------------
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("id, name, store_id, stores (email)")
+      .select("id, name, store_id, stores (email, name)")
       .eq("id", created_by)
       .single()
 
@@ -71,6 +71,8 @@ serve(async (req: Request): Promise<Response> => {
     }
 
     const storeEmail = profile.stores?.email || Deno.env.get("SMTP_FROM")
+
+    const storeName = profile.stores?.name || "Vår butikk"
 
     // ------------------------
     // 3. Opprett customer
@@ -157,12 +159,60 @@ serve(async (req: Request): Promise<Response> => {
         from: `Service <${smtpFrom}>`,
         to: email,
         replyTo: storeEmail,
-        subject: "Du har en ny sak",
+        subject: "Service: Din sak er opprettet - vi trenger litt mer info",
         html: `
-          <p>Hei ${first_name}</p>
-          ${message ? `<p><strong>Melding fra butikk:</strong><br/>${message}</p>` : ""}
-          <p>Klikk på linken for å fylle ut saken:</p>
-          <a href="${link}">${link}</a>
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h2 style="color: #2c3e50;">Hei ${first_name},</h2>
+
+            <p>
+              Vi har opprettet en sak for deg og trenger litt mer informasjon for å kunne hjelpe deg videre.
+            </p>
+
+            ${message ? `
+              <div style="background: #f4f6f8; padding: 12px; border-radius: 6px; margin: 16px 0;">
+                <strong>Melding fra oss:</strong>
+                <p style="margin-top: 8px;">${message}</p>
+              </div>
+            ` : ""}
+
+            <p>
+              Klikk på knappen nedenfor for å åpne saken og fylle inn nødvendig informasjon:
+            </p>
+
+            <p style="text-align: center; margin: 24px 0;">
+              <a href="${link}" 
+                style="
+                  background-color: #2563eb;
+                  color: white;
+                  padding: 12px 20px;
+                  text-decoration: none;
+                  border-radius: 6px;
+                  font-weight: bold;
+                  display: inline-block;
+                ">
+                Åpne sak
+              </a>
+            </p>
+
+            <p>
+              Eller kopier og lim inn denne lenken i nettleseren din:
+            </p>
+
+            <p style="word-break: break-all;">
+              <a href="${link}">${link}</a>
+            </p>
+
+            <hr style="margin: 24px 0;" />
+
+            <p style="font-size: 14px; color: #666;">
+              Denne lenken er gyldig i 7 dager. Ta kontakt dersom du har spørsmål.
+            </p>
+
+            <p style="margin-top: 16px;">
+              Med vennlig hilsen,<br/>
+              ${storeName}
+            </p>
+          </div>
         `,
       })
 
