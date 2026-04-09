@@ -25,7 +25,17 @@ export function CasesPage() {
     { heading: "Type sak", accessor: (caseItem) => caseItem.damage_type },
     { heading: "Status", accessor: (caseItem) => caseItem.status },
     { heading: "Butikk", accessor: (caseItem) => caseItem.stores.name },
-    { heading: "Opprettet", accessor: (caseItem) => caseItem.created_at },
+    {
+      heading: "Opprettet",
+      accessor: (caseItem) =>
+        caseItem.created_at
+          ? new Intl.DateTimeFormat("nb-NO", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(caseItem.created_at))
+          : "-",
+    },
   ];
 
   const [caseData, setCasesData] = useState<CaseListItem[] | null>(null);
