@@ -82,7 +82,7 @@ export function ProductInfo(props: ProductInfoProps) {
                     <input
                         id="productReceitNumber"
                         type="text"
-                        placeholder="Skriv produkt serienummer her"
+                        placeholder="Skriv produkt ordrenummer her"
                         {...register("productReceitNumber")}
                         className="w-full border p-2"
                     />
