@@ -120,8 +120,14 @@ export function CaseComments({ caseId }: Props) {
             >
               <div className="comment-bubble">
                 <div className="comment-header">
-                  <strong>{c.profiles?.name ?? "Ukjent"}</strong>{" "}
-                  <span>({c.profiles?.role})</span>
+                  {c.profiles ? (
+                    <>
+                      <strong>{c.profiles.name}</strong>
+                      <span>({c.profiles.role})</span>
+                    </>
+                  ) : (
+                    <strong>Ukjent bruker</strong>
+                  )}
                 </div>
 
                 <p>{c.comment}</p>
