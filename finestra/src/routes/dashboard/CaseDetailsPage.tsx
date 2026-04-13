@@ -1,12 +1,13 @@
-import { InformationField } from "@/Components/CaseInformationContainer/InformationField/InformationField";
+import { InformationField } from "../../Components/CaseInformationContainer/InformationField/InformationField";
 
 import "./CaseDetailPage.css";
-import { CaseInformationCard } from "@/Components/CaseInformationContainer/CaseInformationCard/CaseInformationCard/CaseInformationCard/CaseInformationCard";
-import ActionButton from "@/Components/ActionButton/ActionButton";
-import CaseEventCard from "@/Components/CaseEventCard/CaseEventCard";
+import { CaseInformationCard } from "../../Components/CaseInformationContainer/CaseInformationCard/CaseInformationCard/CaseInformationCard/CaseInformationCard";
+import ActionButton from "../../Components/ActionButton/ActionButton";
+import CaseEventCard from "../../Components/CaseEventCard/CaseEventCard";
+import { CaseComments } from "../../Components/CaseComments/CaseComments";
 import { useParams } from "react-router-dom";
 import { getCase } from "@/services/caseService";
-import type { CaseListItem } from "@/services/caseService";
+import type { CaseListItem } from "../../services/caseService";
 import { useState, useEffect } from "react";
 
 export function CaseDetailsPage() {
@@ -80,7 +81,7 @@ export function CaseDetailsPage() {
         </section>
         <section>
           <CaseInformationCard title="Saksinformasjon">
-            <InformationField label="Sakstype:" value={caseData.case_type} />
+            <InformationField label="Sakstype:" value={caseData.damage_type} />
             <InformationField label="Butikk:" value={caseData.stores.name} />
             <InformationField
               label="Når problemet oppsto:"
@@ -107,8 +108,9 @@ export function CaseDetailsPage() {
           <CaseEventCard />
           <CaseEventCard />
         </div>
-        <input placeholder="Legg til kommentar..."></input>
-        <ActionButton name="Send" variant="primary"></ActionButton>
+
+        <CaseComments caseId={caseData.id} />
+        
         <div>
           <ActionButton name="Rediger" variant="secondary" />
           <ActionButton name="Avslå sak" variant="secondary" />

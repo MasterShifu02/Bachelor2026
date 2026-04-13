@@ -1,0 +1,128 @@
+.case-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.case-comments h2{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.comments-container {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0.5rem;
+}
+
+/* ROW styrer venstre/høyre */
+.comment-row {
+  display: flex;
+  width: 100%;
+}
+
+.comment-row.me {
+  justify-content: flex-end;
+}
+
+.comment-row.other {
+  justify-content: flex-start;
+}
+
+.comment-bubble {
+  max-width: 70%;
+  width: fit-content;
+  padding: 10px;
+  margin-bottom: 3px;
+
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* DEG */
+.comment-row.me .comment-bubble {
+  background: #30275e;
+  color: white;
+  font-size: 1rem;
+}
+
+/* ANDRE */
+.comment-row.other .comment-bubble {
+  background: #e5e7eb;
+  color: #30275e;
+  font-size: 1rem;
+}
+
+.comment-bubble.me {
+  display: flex;
+  background: #e5e7eb;
+  color: black;
+  align-self: flex-end;
+  font-size: 1.5rem;
+}
+
+.comment-bubble.other {
+  background: #83a9f9;
+  color: black;
+  align-self: flex-start;
+}
+
+.comment-header {
+  font-size: 1rem;
+  font-weight: bold;
+  /* opacity: 0.7; */
+  margin-bottom: 2px;
+  /* color: #30275e; */
+}
+
+.comment-row.other .comment-timestamp {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+.comment-row.me .comment-timestamp {
+  font-size: 0.75rem;
+  color: #d0d4dd;
+  margin-top: 3px;
+}
+
+.comment-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.comment-input textarea {
+  flex: 1;
+  resize: none;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  min-height: 40px;
+  max-height: 150px;
+  max-width: 30rem;
+  overflow-y: auto;
+}
+
+.comment-input button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.comment-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
