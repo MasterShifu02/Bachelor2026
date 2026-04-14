@@ -30,7 +30,7 @@ export async function getCases(): Promise<CaseListItem[]> {
     .select(`
       *,
       customers (first_name,last_name,email,phone),
-      products (product_name,model),
+      products (product_name),
       stores (name)
     `)
     .order("created_at", { ascending: false })
@@ -49,7 +49,7 @@ export async function getCase(caseId: string): Promise<CaseListItem> {
     .select(`
       *,
       customers (first_name,last_name,email,phone),
-      products (product_name,model,serial_number,spacer_number,purchase_date,created_at),
+      products (product_name,serial_number,spacer_number,purchase_date,created_at),
       stores (name)
     `)
     .eq("id", caseId)

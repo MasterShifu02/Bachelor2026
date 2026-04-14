@@ -59,7 +59,7 @@ export function CaseDetailsPage() {
           <CaseInformationCard title="Produktdetaljer">
             <InformationField
               label="Produktnavn / modell:"
-              value={`${caseData.products.product_name} / ${caseData.products.model}`}
+              value={`${caseData.products.product_name}`}
             />
             <InformationField
               label="Spacernummer:"
