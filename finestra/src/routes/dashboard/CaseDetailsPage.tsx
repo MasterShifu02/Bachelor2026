@@ -6,7 +6,7 @@ import ActionButton from "../../Components/ActionButton/ActionButton";
 import CaseEventCard from "../../Components/CaseEventCard/CaseEventCard";
 import { CaseComments } from "../../Components/CaseComments/CaseComments";
 import { useParams } from "react-router-dom";
-import { getCase } from "@/services/caseService";
+import { getCase } from "../../services/caseService";
 import type { CaseListItem } from "../../services/caseService";
 import { useState, useEffect } from "react";
 
