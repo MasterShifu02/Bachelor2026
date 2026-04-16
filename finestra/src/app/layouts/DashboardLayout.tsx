@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
-import { Header } from '@/components/header/header'
-import { Footer } from '@/components/footer/footer'
+import { Header } from '../../Components/Header/header'
+import { Footer } from '../../Components/Footer/footer'
 
 export function DashboardLayout() {
   return (

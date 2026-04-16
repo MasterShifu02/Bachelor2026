@@ -1,13 +1,13 @@
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/Components/ui/table";
-import type { Case } from "../FilterBar/dummyCases";
+// import type { Case } from "../FilterBar/dummyCases";
 import { useNavigate } from "react-router-dom";
 import { type CaseListItem } from "@/services/caseService";
 import { type Column } from "../StoreDashboard/StoreDashboard";

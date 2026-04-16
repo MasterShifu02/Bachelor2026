@@ -3,8 +3,8 @@ import CaseTable from "../CaseTable/CaseTable";
 import { FilterBar } from "../FilterBar/FilterBar";
 import React, { useState, useEffect } from "react";
 import { dummyCases, statuses } from "../FilterBar/dummyCases";
-import { getCases, type CaseListItem } from "@/services/caseService";
-import { set } from "zod";
+import { getCases, type CaseListItem } from "../../services/caseService";
+// import { set } from "zod";
 
 //Definerer type av kolonner
 export type Column = {

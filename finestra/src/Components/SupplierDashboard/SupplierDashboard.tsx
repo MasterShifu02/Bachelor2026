@@ -4,7 +4,7 @@ import { dummyCases, statuses } from "../FilterBar/dummyCases";
 import React, { useState, useEffect } from "react";
 import NavigationButton from "../NavigationButton/NavigationButton";
 import "./SupplierDashboard.css";
-import { getCases, type CaseListItem } from "@/services/caseService";
+import { getCases, type CaseListItem } from "../../services/caseService";
 
 export type Column = {
   heading: string;

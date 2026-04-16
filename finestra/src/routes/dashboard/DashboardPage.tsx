@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { StoreDashboard } from "../../Components/StoreDashboard/StoreDashboard"
 import { SupplierDashboard } from "../../Components/SupplierDashboard/SupplierDashboard"
-import { getProfile } from "@/services/authService"
+import { getProfile } from "../../services/authService"
 
 export function DashboardPage() {
   const [role, setRole] = useState<string | null>(null)

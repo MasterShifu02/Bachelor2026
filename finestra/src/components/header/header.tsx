@@ -1,6 +1,6 @@
 import "./header.css"
 import { useEffect, useState } from "react"
-import { getProfile, logout } from "@/services/authService"
+import { getProfile, logout } from "../../services/authService"
 import { useNavigate } from "react-router-dom"
 import type { Tables } from "../../types/database.types"
 

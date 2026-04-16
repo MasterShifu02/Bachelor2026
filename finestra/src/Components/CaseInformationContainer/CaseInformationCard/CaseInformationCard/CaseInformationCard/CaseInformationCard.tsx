@@ -8,7 +8,7 @@ type CaseInformationCardProps = {
 export function CaseInformationCard({
   title,
   children,
-  className = "",
+  // className = "",
 }: CaseInformationCardProps) {
   return (
     <div className="case-information-card">

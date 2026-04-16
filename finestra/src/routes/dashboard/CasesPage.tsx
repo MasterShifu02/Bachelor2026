@@ -1,9 +1,9 @@
-import CaseTable from "@/Components/CaseTable/CaseTable";
-import { getCases } from "@/services/caseService";
+import CaseTable from "../../Components/CaseTable/CaseTable";
+import { getCases } from "../../services/caseService";
 import { useEffect, useState } from "react";
-import { type CaseListItem } from "@/services/caseService";
-import { FilterBar } from "@/Components/FilterBar/FilterBar";
-import { dummyCases, statuses } from "@/Components/FilterBar/dummyCases";
+import { type CaseListItem } from "../../services/caseService";
+import { FilterBar } from "../../Components/FilterBar/FilterBar";
+import { dummyCases, statuses } from "../../Components/FilterBar/dummyCases";
 
 export type Column = {
   heading: string;

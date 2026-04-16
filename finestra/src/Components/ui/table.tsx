@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
-import { Key } from "lucide-react";
+import { cn } from "../../lib/utils";
+// import { useNavigate } from "react-router-dom";
+// import { Key } from "lucide-react";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
