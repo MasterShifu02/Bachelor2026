@@ -24,6 +24,12 @@ import { ContactInfo } from "../../Components/customer-form/sections/ContactInfo
 import { toast } from "sonner"
 // import { useNavigate } from "react-router-dom"
 
+type ExistingFile = {
+  id: string;
+  file_url: string;
+  signedUrl: string | null;
+};
+
 type CustomerFormProps = {
   token: string;
 };
@@ -31,6 +37,8 @@ type CustomerFormProps = {
 export function CustomerForm({ token }: CustomerFormProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [existingFiles, setExistingFiles] = useState<ExistingFile[]>([]);
 
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(customerFormSchema),
@@ -44,6 +52,69 @@ export function CustomerForm({ token }: CustomerFormProps) {
   const selectedProblemType = watch("problemType");
   const problemDescriptionHelpText = getProblemTypeDescription(selectedProblemType);
   const documentationHelpText = getProblemTypeDocumentationHelpText(selectedProblemType);
+
+  // LEGG TIL filer (ikke overskriv)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (!fileList) return;
+
+    const newFiles = Array.from(fileList);
+
+    setFiles((prev) => {
+      const isDuplicate = (file: File) =>
+        prev.some(
+          (f) =>
+            f.name === file.name &&
+            f.size === file.size &&
+            f.lastModified === file.lastModified
+        );
+
+      return [
+        ...prev,
+        ...newFiles.filter((file) => !isDuplicate(file)),
+      ];
+    });
+
+    if (newFiles.some((file) => 
+      files.some(
+        (f) => 
+          f.name === file.name && 
+          f.size === file.size && 
+          f.lastModified === file.lastModified))
+        ) 
+    {
+      toast.error("Denne filen er allerede lagt til!");
+      // toast.error("Denne filen er allerede lagt til: " + newFiles.map(f => f.name).join(", "));
+    }
+
+    e.target.value = "";
+  };
+
+  // fjerne fil
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  //  DELETE existing file (backend + storage)
+  const removeExistingFile = async (fileId: string) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-token?token=${token}&action=delete-file&id=${fileId}`,
+        { method: "POST" }
+      );
+
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+
+      setExistingFiles((prev) => prev.filter((f) => f.id !== fileId));
+
+      toast.success("Vedlegg slettet");
+    } catch (err) {
+      console.error(err);
+      toast.error("Kunne ikke slette vedlegg");
+    }
+  };  
 
   // Prefill via token
   useEffect(() => {
@@ -79,6 +150,8 @@ export function CustomerForm({ token }: CustomerFormProps) {
           problemDate: data.problemDate ?? "",
         });
 
+        setExistingFiles(data.attachments || []);
+
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -94,6 +167,29 @@ export function CustomerForm({ token }: CustomerFormProps) {
 
   const onSubmit = async (values: CustomerFormValues) => {
     try {
+      // -------------------
+      // 1. LAST OPP FILER FØRST
+      // -------------------
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const uploadRes = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-token?token=${token}&action=upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadRes.ok) {
+          console.error("Filopplasting feilet:", await uploadRes.text());
+        }
+      }
+
+      // -------------------
+      // 2. DERETTER SUBMIT
+      // -------------------
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/case-token?token=${token}&action=submit`,
         {
@@ -101,27 +197,23 @@ export function CustomerForm({ token }: CustomerFormProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         }
-      )
+      );
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Noe gikk galt ved innsending")
+        throw new Error(data.error || "Noe gikk galt ved innsending");
       }
 
-      toast.success("Skjema sendt inn!")
-
-      // redirect etter litt delay
-      // setTimeout(() => {
-      //   navigate("/takk") // eller custom page
-      // }, 1500)
+      toast.success("Skjema sendt inn!");
+      setFiles([]);
 
     } catch (err) {
-      console.error("Submit failed:", err)
+      console.error("Submit failed:", err);
 
       toast.error(
         err instanceof Error ? err.message : "Noe gikk galt"
-      )
+      );
     }
   };
 
@@ -159,6 +251,11 @@ export function CustomerForm({ token }: CustomerFormProps) {
           selectedProblemType={selectedProblemType}
           problemDescriptionHelpText={problemDescriptionHelpText}
           documentationHelpText={documentationHelpText}
+          onFileChange={handleFileChange}
+          existingFiles={existingFiles}
+          onRemoveFile={removeFile}
+          onRemoveExistingFile={(file) => removeExistingFile(file.id)}
+          files={files}
         />
 
         <Separator className="p-1 mb-4" />

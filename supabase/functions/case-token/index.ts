@@ -50,6 +50,10 @@ serve(async (req: Request) => {
       .from("cases")
       .select(`
         *,
+        attachments (
+          id,
+          file_url
+        ),
         customers (
           id,
           first_name,
@@ -96,6 +100,21 @@ serve(async (req: Request) => {
       })
     }
 
+    // For å få signed URLs for alle vedlegg
+    const attachmentsWithUrls = await Promise.all(
+      (caseData.attachments ?? []).map(async (file: { file_url: any; id: any }) => {
+        const { data } = await supabase.storage
+          .from("attachments")
+          .createSignedUrl(file.file_url, 60 * 60); // 1 time
+
+        return {
+          id: file.id,
+          file_url: file.file_url,
+          signedUrl: data?.signedUrl || null,
+        };
+      })
+    );
+
     // -------------------
     // GET → PREFILL DATA
     // -------------------
@@ -119,6 +138,10 @@ serve(async (req: Request) => {
           problemType: caseData.damage_type || "",
           problemDescription: caseData.description || "",
           problemDate: caseData.problem_date || "",
+
+          // ATTACHMENTS
+          attachments: attachmentsWithUrls,
+
         }),
         { status: 200, headers }
       )
@@ -256,11 +279,11 @@ serve(async (req: Request) => {
     }
 
     // -------------------
-    // 📎 FILE UPLOAD (uendret)
+    // FILE UPLOAD
     // -------------------
     if (req.method === "POST" && action === "upload") {
       const formData = await req.formData()
-      const file = formData.get("file") as File
+      const file = formData.get("file") as File | null
 
       if (!file) {
         return new Response(JSON.stringify({ error: "No file provided" }), {
@@ -271,22 +294,32 @@ serve(async (req: Request) => {
 
       const filePath = `${caseData.id}/${crypto.randomUUID()}-${file.name}`
 
+      // bruk stream + metadata
       const { error: uploadError } = await supabase.storage
         .from("attachments")
-        .upload(filePath, file.stream())
+        .upload(filePath, file, {
+          contentType: file.type,
+          upsert: false,
+        })
 
       if (uploadError) {
+        console.error("UPLOAD ERROR:", uploadError)
+
         return new Response(JSON.stringify({ error: uploadError.message }), {
           status: 500,
           headers,
         })
       }
 
-      await supabase.from("attachments").insert({
+      const { error: dbError } = await supabase.from("attachments").insert({
         case_id: caseData.id,
         file_url: filePath,
         uploaded_by: null,
       })
+
+      if (dbError) {
+        console.error("DB INSERT ERROR:", dbError)
+      }
 
       return new Response(JSON.stringify({ message: "File uploaded" }), {
         status: 200,
@@ -294,15 +327,85 @@ serve(async (req: Request) => {
       })
     }
 
+    // -------------------
+    // DELETE FILE
+    // -------------------
+    if (req.method === "POST" && action === "delete-file") {
+      const fileId = url.searchParams.get("id");
+
+      if (!fileId) {
+        return new Response(JSON.stringify({ error: "Missing file id" }), {
+          status: 400,
+          headers,
+        });
+      }
+
+      // 1. Hent fil fra DB
+      const { data: fileData, error: fileError } = await supabase
+        .from("attachments")
+        .select("id, file_url, case_id")
+        .eq("id", fileId)
+        .single();
+
+      if (fileError || !fileData) {
+        return new Response(JSON.stringify({ error: "File not found" }), {
+          status: 404,
+          headers,
+        });
+      }
+
+      // sørg for at fil tilhører riktig case
+      if (fileData.case_id !== caseData.id) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 403,
+          headers,
+        });
+      }
+
+      // 2. Slett fra storage
+      const { error: storageError } = await supabase.storage
+        .from("attachments")
+        .remove([fileData.file_url]);
+
+      if (storageError) {
+        console.error("STORAGE DELETE ERROR:", storageError);
+
+        return new Response(JSON.stringify({ error: storageError.message }), {
+          status: 500,
+          headers,
+        });
+      }
+
+      // 3. Slett fra DB
+      const { error: dbError } = await supabase
+        .from("attachments")
+        .delete()
+        .eq("id", fileId);
+
+      if (dbError) {
+        console.error("DB DELETE ERROR:", dbError);
+
+        return new Response(JSON.stringify({ error: dbError.message }), {
+          status: 500,
+          headers,
+        });
+      }
+
+      return new Response(JSON.stringify({ message: "File deleted" }), {
+        status: 200,
+        headers,
+      });
+    }
+
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
       headers,
     })
-  } catch (err: any) {
-    console.error("ERROR:", err)
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers,
-    })
-  }
+    } catch (err: any) {
+      console.error("ERROR:", err)
+      return new Response(JSON.stringify({ error: err.message }), {
+        status: 500,
+        headers,
+      })
+    }
 })
