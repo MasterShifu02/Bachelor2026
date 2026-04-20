@@ -4,6 +4,7 @@
   justify-content: center;
   padding: 3rem 1rem;
   background: #f7f5f2;
+  height: 100vh;
 }
 
 .login-card {
@@ -73,3 +74,8 @@
   color: #ffffff;
 }
 
+.login-button:hover {
+  background: #ffffff;
+  color: #000000;
+  cursor: pointer;
+}

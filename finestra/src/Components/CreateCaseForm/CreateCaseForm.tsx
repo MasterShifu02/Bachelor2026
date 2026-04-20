@@ -92,7 +92,7 @@ function CreateCaseForm() {
 
         <div className="message">
           <label className="inputLabel">Melding (valgfritt)</label>
-          <textarea name="messagefield"></textarea>
+          <textarea className="messagefield" name="messagefield"></textarea>
 
           <div className="buttonSection">
             <ActionButton
@@ -106,6 +106,7 @@ function CreateCaseForm() {
               name="Avbryt"
               variant="secondary"
               type="button"
+              onClick={() => navigate("/dashboard")}
               disabled={loading}
             />
 

@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase/client"
 import type { Database } from "../types/database.types"
+import { getProfile } from "./authService"
 
 // Typene vi trenger
 export type Customer = Database["public"]["Tables"]["customers"]["Row"]
@@ -8,6 +9,7 @@ export type Store = Database["public"]["Tables"]["stores"]["Row"]
 export type CaseRow = Database["public"]["Tables"]["cases"]["Row"]
 export type CaseEvent = Database["public"]["Tables"]["case_events"]["Row"]
 export type CaseComment = Database["public"]["Tables"]["case_comments"]["Row"]
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
 
 export type CaseListItem = CaseRow & {
   customers: Customer
@@ -49,7 +51,7 @@ export async function getCase(caseId: string): Promise<CaseListItem> {
     .select(`
       *,
       customers (first_name,last_name,email,phone),
-      products (product_name,serial_number,spacer_number,purchase_date,created_at),
+      products (product_name,serial_number,spacer_number,purchase_date,created_at,order_number),
       stores (name)
     `)
     .eq("id", caseId)
@@ -124,10 +126,55 @@ export async function updateCaseStatus(caseId: string, status: CaseRow["status"]
     .update({ status })
     .eq("id", caseId)
     .select()
-    .single()
+    .single();
 
   if (error) throw error
   return data as CaseRow
+}
+
+// ------------------------------
+// OPPDATER STATUS + LOGG EVENT
+// ------------------------------
+export async function updateCaseStatusWithEvent(
+  caseId: string,
+  status: CaseRow["status"],
+  eventType: string,
+  description: string
+) {
+  // 1. oppdater status
+  const { data: updatedCase, error: updateError } = await supabase
+    .from("cases")
+    .update({ status })
+    .eq("id", caseId)
+    .select()
+    .single();
+
+  if (updateError) throw updateError;
+  if (!updatedCase) throw new Error("Fant ikke saken etter update");
+
+  // 2. hent bruker
+  const { data: userData } = await supabase.auth.getUser();
+
+  const user = userData.user;
+
+  if (!user) throw new Error("Ikke logget inn");
+
+  // 3. hent profil
+  const profile = await getProfile().catch(() => null);
+  const actorName = profile?.name || "ukjent";
+
+  // 4. legg til event
+  const { error: eventError } = await supabase.from("case_events").insert({
+    case_id: caseId,
+    actor_name: actorName,
+    actor_role: "store",
+    event_type: eventType,
+    description,
+  });
+
+  if (eventError) throw eventError;
+
+  return updatedCase;
 }
 
 export async function createCase(payload: {

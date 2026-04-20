@@ -1,22 +1,18 @@
-import { statuses } from "./dummyCases";
+import { statusLabels, type Status } from "../../constants/statuses";
 import "./FilterBar.css";
+
 type FilterBarProps = {
-  selectedStore: string;
-  setSelectedStore: (store: string) => void;
-  allStores: string[];
   selectedStatus: string;
-  setSelectedStatus: (status: string) => void;
-  statuses: readonly string[];
+  setSelectedStatus: (status: Status | "") => void;
+  statuses: readonly Status[];
   searchTerm: string;
-  setSearchTerm: (seardchTerm: string) => void;
+  setSearchTerm: (searchTerm: string) => void;
 };
 
 export function FilterBar({
-  setSelectedStore,
-  selectedStore,
-  allStores,
   selectedStatus,
   setSelectedStatus,
+  statuses,
   searchTerm,
   setSearchTerm,
 }: FilterBarProps) {
@@ -24,35 +20,26 @@ export function FilterBar({
     <>
       <select
         className="options-button"
-        value={selectedStore}
-        onChange={(e) => setSelectedStore(e.target.value)}
-      >
-        <option value="">Butikk</option>
-        {allStores.map((store) => (
-          <option key={store} value={store}>
-            {store}
-          </option>
-        ))}
-      </select>
-      <select
-        className="options-button"
         value={selectedStatus}
-        onChange={(e) => setSelectedStatus(e.target.value)}
+        onChange={(e) =>
+          setSelectedStatus(e.target.value as Status | "")
+        }
       >
         <option value="">Status</option>
         {statuses.map((status) => (
           <option key={status} value={status}>
-            {status}
+            {statusLabels[status]}
           </option>
         ))}
       </select>
+
       <input
         className="searchField"
         type="search"
         value={searchTerm}
-        placeholder="Søk etter ordernummer..."
+        placeholder="Søk etter saksnummer, navn, e-post..."
         onChange={(e) => setSearchTerm(e.target.value)}
-      ></input>
+      />
     </>
   );
 }
