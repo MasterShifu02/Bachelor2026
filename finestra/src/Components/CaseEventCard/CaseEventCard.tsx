@@ -3,9 +3,10 @@ import type { CaseEvent } from "../../services/caseService";
 
 type Props = {
   event: CaseEvent;
+  index?: number; // for stagger animation
 };
 
-export default function CaseEventCard({ event }: Props) {
+export default function CaseEventCard({ event, index = 0 }: Props) {
   const getTypeClass = () => {
     switch (event.event_type) {
       case "status_change":
@@ -18,8 +19,10 @@ export default function CaseEventCard({ event }: Props) {
   };
 
   return (
-    
-    <div className="timeline-item">
+    <div
+      className="timeline-item"
+      style={{ animationDelay: `${index * 0.08}s` }} // stagger
+    >
       {/* DOT */}
       <div className={`timeline-dot ${getTypeClass()}`} />
 

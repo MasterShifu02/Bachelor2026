@@ -10,6 +10,7 @@ export type CaseRow = Database["public"]["Tables"]["cases"]["Row"]
 export type CaseEvent = Database["public"]["Tables"]["case_events"]["Row"]
 export type CaseComment = Database["public"]["Tables"]["case_comments"]["Row"]
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
+export type Attachment = Database["public"]["Tables"]["attachments"]["Row"];
 
 export type CaseListItem = CaseRow & {
   customers: Customer
@@ -175,6 +176,30 @@ export async function updateCaseStatusWithEvent(
   if (eventError) throw eventError;
 
   return updatedCase;
+}
+
+export async function getCaseAttachments(caseId: string): Promise<Attachment[]> {
+  const { data, error } = await supabase
+    .from("attachments")
+    .select("*")
+    .eq("case_id", caseId);
+
+  if (error) throw error;
+
+  const filesWithUrls = await Promise.all(
+    (data || []).map(async (file) => {
+      const { data: signed } = await supabase.storage
+        .from("attachments")
+        .createSignedUrl(file.file_url, 60 * 60);
+
+      return {
+        ...file,
+        signedUrl: signed?.signedUrl || "",
+      };
+    })
+  );
+
+  return filesWithUrls;
 }
 
 export async function createCase(payload: {

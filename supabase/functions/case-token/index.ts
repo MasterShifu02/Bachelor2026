@@ -103,9 +103,13 @@ serve(async (req: Request) => {
     // For å få signed URLs for alle vedlegg
     const attachmentsWithUrls = await Promise.all(
       (caseData.attachments ?? []).map(async (file: { file_url: any; id: any }) => {
-        const { data } = await supabase.storage
+        const { data, error: signError } = await supabase.storage
           .from("attachments")
           .createSignedUrl(file.file_url, 60 * 60); // 1 time
+
+        if (signError) {
+          console.error("SIGNED URL ERROR:", signError, file.file_url);
+        }
 
         return {
           id: file.id,
@@ -269,7 +273,7 @@ serve(async (req: Request) => {
         actor_name: `${firstName} ${lastName}`,
         actor_role: "customer",
         event_type: "submitted_form",
-        description: "Customer submitted case form",
+        description: "Kunden har sendt inn saksskjema",
       })
 
       return new Response(JSON.stringify(updatedCase), {
@@ -292,7 +296,11 @@ serve(async (req: Request) => {
         })
       }
 
-      const filePath = `${caseData.id}/${crypto.randomUUID()}-${file.name}`
+      const safeFileName = file.name
+        .replace(/\s+/g, "_")        // spaces → _
+        .replace(/[^\w.-]/g, "");    // fjern rare tegn
+      
+      const filePath = `${caseData.id}/${crypto.randomUUID()}-${safeFileName}`
 
       // bruk stream + metadata
       const { error: uploadError } = await supabase.storage

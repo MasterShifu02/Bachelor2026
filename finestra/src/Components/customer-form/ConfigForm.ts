@@ -7,15 +7,15 @@ type ProblemTypeOption = {
 
 export const problemTypeOptions: ProblemTypeOption[] = [
   {
-    value: "skade_pa_glass",
+    value: "skade på glass",
     label: "Skade på glass",
     description:
-      "Beskriv hvor skaden er på glasset, hvor stor den er, og om den ble oppdaget ved levering eller senere.",
+      "Beskriv hvor s kaden er på glasset, hvor stor den er, og om den ble oppdaget ved levering eller senere.",
     documentationHelpText:
       "Last opp minst 2 bilder. Et nærbilde av skaden og et oversiktsbilde av hele vinduet.",
   },
   {
-    value: "skade_pa_overflate",
+    value: "skade på overflate",
     label: "Skade på overflate",
     description:
       "Beskriv skaden på karm, ramme eller annen overflate, og hvor synlig den er.",
@@ -31,7 +31,7 @@ export const problemTypeOptions: ProblemTypeOption[] = [
       "Hvis mulig, legg ved bilder som viser hvordan vinduet står eller hva som ikke fungerer.",
   },
   {
-    value: "feil_produkt",
+    value: "feil produkt",
     label: "Feil produkt",
     description:
       "Beskriv hva som er feil med produktet sammenlignet med det som ble bestilt.",
@@ -39,7 +39,7 @@ export const problemTypeOptions: ProblemTypeOption[] = [
       "Legg ved bilder av produktet og gjerne merking eller detaljer som viser avviket.",
   },
   {
-    value: "mangler_pa_produkt",
+    value: "mangler på produkt",
     label: "Mangler på produkt",
     description:
       "Beskriv hvilke deler eller egenskaper som mangler på produktet.",
@@ -47,7 +47,7 @@ export const problemTypeOptions: ProblemTypeOption[] = [
       "Legg ved bilder som viser hva som mangler, og gjerne oversiktsbilde av hele produktet.",
   },
   {
-    value: "darlig_utforelse",
+    value: "darlig utførelse",
     label: "Dårlig utførelse",
     description:
       "Beskriv hva du opplever som dårlig utførelse og hvordan det påvirker produktet.",
