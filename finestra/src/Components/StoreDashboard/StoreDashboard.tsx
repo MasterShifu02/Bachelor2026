@@ -20,7 +20,8 @@ const statusColors: Record<Status, string> = {
   approved_by_store: "bg-green-100 text-darkgreen-800",
   forwarded_to_supplier: "bg-blue-100 text-blue-800",
   resolved: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
+  rejected_by_store: "bg-red-100 text-red-800",
+  rejected_by_supplier: "bg-red-100 text-red-800",
 };
 
 function StoreDashboard() {

@@ -19,10 +19,11 @@ const statusColors: Record<Status, string> = {
   draft: "bg-gray-200 text-gray-700",
   waiting_for_customer: "bg-yellow-100 text-yellow-800",
   submitted_by_customer: "bg-purple-100 text-purple-800",
-  approved_by_store: "bg-blue-100 text-blue-800",
-  forwarded_to_supplier: "bg-orange-100 text-orange-800",
+  approved_by_store: "bg-green-100 text-green-800",
+  forwarded_to_supplier: "bg-blue-100 text-blue-800",
   resolved: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
+  rejected_by_store: "bg-red-100 text-red-800",
+  rejected_by_supplier: "bg-red-100 text-red-800",
 };
 
 export function CasesPage() {

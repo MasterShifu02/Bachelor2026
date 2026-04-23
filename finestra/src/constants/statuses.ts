@@ -5,7 +5,8 @@ export const statuses = [
   "approved_by_store",
   "forwarded_to_supplier",
   "resolved",
-  "rejected",
+  "rejected_by_store",
+  "rejected_by_supplier",
 ] as const;
 
 export type Status = typeof statuses[number];
@@ -18,5 +19,6 @@ export const statusLabels: Record<Status, string> = {
   approved_by_store: "Godkjent av butikk",
   forwarded_to_supplier: "Sendt til leverandør",
   resolved: "Løst",
-  rejected: "Avvist",
+  rejected_by_store: "Avslått av butikk",
+  rejected_by_supplier: "Avvist av leverandør",
 };

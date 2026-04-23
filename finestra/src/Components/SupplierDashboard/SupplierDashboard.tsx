@@ -19,7 +19,8 @@ const statusColors: Record<Status, string> = {
   approved_by_store: "bg-green-100 text-green-800",
   forwarded_to_supplier: "bg-blue-100 text-blue-800",
   resolved: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800",
+  rejected_by_store: "bg-red-100 text-red-800",
+  rejected_by_supplier: "bg-red-100 text-red-800",
 };
 
 function SupplierDashboard() {
@@ -118,7 +119,7 @@ function SupplierDashboard() {
 
   const incomingCases =
     casesData?.filter(
-      (c) => c.status === "forwarded_to_supplier"
+      (c) => c.status === "forwarded_to_supplier" || c.status === "resolved" || c.status === "rejected_by_supplier"
     ) || [];
 
   const filteredIncomingCases = incomingCases.filter((caseItem) => {

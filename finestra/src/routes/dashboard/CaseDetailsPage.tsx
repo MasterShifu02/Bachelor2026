@@ -182,7 +182,7 @@ export function CaseDetailsPage() {
     try {
       const updated = await updateCaseStatusWithEvent(
         caseData.id,
-        "rejected",
+        isSupplier ? "rejected_by_supplier" : "rejected_by_store",
         "status_change",
         isSupplier ? "Saken ble avvist av leverandør" : "Saken ble avslått av butikk"
       );

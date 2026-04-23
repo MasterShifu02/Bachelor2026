@@ -131,7 +131,12 @@
   color: #dcfce7;
 }
 
-.status-rejected {
+.status-rejected_by_store {
+  background: #991b1b;
+  color: #fee2e2;
+}
+
+.status-rejected_by_supplier {
   background: #991b1b;
   color: #fee2e2;
 }

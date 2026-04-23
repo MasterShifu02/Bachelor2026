@@ -13,8 +13,12 @@ export const customerFormSchema = z.object({
 
   productSerialNumber: z
     .string()
-    .min(5)
-    .max(100)
+    .min(6, {
+      message: "Skriv inn serienummer.",
+    })
+    .max(100, {
+      message: "Serienummer er for langt.",
+    })
     .optional(),
 
   productSpacerNumber: z
