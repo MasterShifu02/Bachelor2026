@@ -6,7 +6,7 @@ export const customerFormSchema = z.object({
   productNameModel: z
     .string()
     .min(5, {
-      message: "Skriv inn produktnavn eller modell.",
+      message: "Skriv inn produktnavn eller modell (min. 5-karakterer)",
     })
     .max(100, {
       message: "Produktnavn eller modell er for lang.",}),
@@ -14,7 +14,7 @@ export const customerFormSchema = z.object({
   productSerialNumber: z
     .string()
     .min(6, {
-      message: "Skriv inn serienummer.",
+      message: "Skriv inn serienummer (min. 6-tall).",
     })
     .max(100, {
       message: "Serienummer er for langt.",
@@ -23,8 +23,12 @@ export const customerFormSchema = z.object({
 
   productSpacerNumber: z
     .string()
-    .min(5)
-    .max(100),
+    .min(7, {
+      message: "Skriv inn Spacer nummer (min. 7-tall).",
+    })
+     .max(100, {
+      message: "Spacer nummer er for langt.",
+    }),
 
   productPurchaseDate: z
     .string()
@@ -33,8 +37,12 @@ export const customerFormSchema = z.object({
 
   productReceitNumber: z
     .string()
-    .min(5)
-    .max(100),
+    .min(8, {
+      message: "Skriv inn Ordre nummer (min. 8-tall).",
+    })
+     .max(100, {
+      message: "Ordre nummer er for langt.",
+    }),
 
 
 
